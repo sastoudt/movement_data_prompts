@@ -43,7 +43,8 @@ fluidPage(
         card(
           card_header("Card 2 header"),
           p("Card 2 body"),
-          textInput("text", "Add text", ""),
+          textAreaInput("text", "Add text", "", height = '600px', width = '600px'),
+          downloadButton('downloadText', 'Download Text'),
         ),
       )
     ),

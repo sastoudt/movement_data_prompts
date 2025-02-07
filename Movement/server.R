@@ -11,6 +11,17 @@ library(shiny)
 
 # Define server logic required to draw a histogram
 function(input, output, session) {
+  
+  output$downloadText <- downloadHandler(
+       filename = function() {
+         paste('draft-', gsub(" ", "_", Sys.time()), '.txt', sep='')
+       },
+       content = function(con) {
+           writeLines(input$text, con)
+       }
+    )
+  
+  
   output$deer <- renderLeaflet({
     data(deer)
     deer_coords <- do.call(rbind, st_geometry(deer)) %>%
