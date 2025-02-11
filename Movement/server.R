@@ -11,17 +11,16 @@ library(shiny)
 
 # Define server logic required to draw a histogram
 function(input, output, session) {
-  
   output$downloadText <- downloadHandler(
-       filename = function() {
-         paste('draft-', gsub(" ", "_", Sys.time()), '.txt', sep='')
-       },
-       content = function(con) {
-           writeLines(input$text, con)
-       }
-    )
-  
-  
+    filename = function() {
+      paste("draft-", gsub(" ", "_", Sys.time()), ".txt", sep = "")
+    },
+    content = function(con) {
+      writeLines(input$text, con)
+    }
+  )
+
+
   output$deer <- renderLeaflet({
     data(deer)
     deer_coords <- do.call(rbind, st_geometry(deer)) %>%
@@ -40,7 +39,7 @@ function(input, output, session) {
       addProviderTiles(map_to_use) %>%
       setView(-96.39, 34.77, 14) %>%
       addTimeline(
-        sliderOpts = sliderOptions(duration = 1000 * 60), ## max duration in milliseconds
+        sliderOpts = sliderOptions(duration = input$time_to_write * 1000 * 60), ## max duration in milliseconds
         timelineOpts = timelineOptions(
           styleOptions = NULL, # make sure default style does not override
           pointToLayer = htmlwidgets::JS(
