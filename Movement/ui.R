@@ -26,12 +26,19 @@ fluidPage(
       "Deer",
       card(
         card_header("What am I looking at?"),
-        p("background")
+        p("
+          This data comes from a scientific study of white-tailed deer in Oklahoma, USA who are wearing GPS collars that keep track of each deer's location over time. 
+          Below, you'll see the paths of two individual deer over the course of a week in March 2005.
+          "),
+        HTML("<a href='https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/1365-2656.12198'>Check out the research paper here.</a>"),
+       
       ),
       layout_columns(
         card(
-          card_header("Card 1 header"),
-          p("Card 1 body"),
+          card_header("Show me the data!"),
+          p("A week in the lives of these two deer will unfold for you on the map below.
+            Before starting, tailor your point of view by choosing a backdrop for the map. Feel free to zoom in and out to explore the area, but note that the viewing window by default is centered on where the action is.
+            In addition, choose the speed at which the data will unfold. A week will be compressed (or drawn out) to fill the time limit you choose for your free writing."),
           radioButtons(
             "map_type", "Map point of view:",
             c(
@@ -45,15 +52,19 @@ fluidPage(
           leafletOutput("deer"),
         ),
         card(
-          card_header("Card 2 header"),
-          p("Card 2 body"),
-          textAreaInput("text", "Add text", "", height = "600px", width = "600px"),
+          card_header("Get writing! What do you notice? What do you wonder?"),
+          p("As you watch the deer, free write as many noticings and wonderings as you can before the movie ends."),
+          textAreaInput("text", "", "", height = "600px", width = "600px"),
           downloadButton("downloadText", "Download Text"),
         ),
       ),
       card(
         card_header("Writing Prompts"),
         p("prompts to come")
+      ),
+      card(
+        card_header("Behind the Scenes Inspiration"),
+        p("what do you notice, what do you wonder, 50 first lines, connect to dodge examples")
       )
     ),
     tabPanel("")
