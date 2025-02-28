@@ -68,6 +68,34 @@ fluidPage(
         p("what do you notice, what do you wonder, 50 first lines, connect to dodge examples")
       )
     ),
-    tabPanel("White-tailed Deer: A Deeper Dive")
+    tabPanel("White-tailed Deer: A Deeper Dive",
+             card(
+               card_header(""),
+               p(""),
+             ),
+             layout_columns(
+               card(
+                 card_header(""),
+                 p(""),
+                 ## toggles
+                 ## output
+               ),
+               card(
+                 card_header("Get writing!"),
+                 p(""),
+                 textAreaInput("text2", "", "", height = "600px", width = "600px"),
+                 p("When you are done, feel free to download your ideas so you have them for future reference."),
+                 downloadButton("downloadText2", "Download Text"),
+               ),
+             ),
+             card(
+               card_header("Writing Prompts"),
+               p("prompts to come")
+             ),
+             card(
+               card_header("Behind the Scenes Inspiration"),
+               p("")
+             )
+             )
   )
 )

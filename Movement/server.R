@@ -13,10 +13,19 @@ library(shiny)
 function(input, output, session) {
   output$downloadText <- downloadHandler(
     filename = function() {
-      paste("draft-", gsub(" ", "_", Sys.time()), ".txt", sep = "")
+      paste("draft-deer-glance-", gsub(" ", "_", Sys.time()), ".txt", sep = "")
     },
     content = function(con) {
       writeLines(input$text, con)
+    }
+  )
+  
+  output$downloadText2 <- downloadHandler(
+    filename = function() {
+      paste("draft-deer-dive-", gsub(" ", "_", Sys.time()), ".txt", sep = "")
+    },
+    content = function(con) {
+      writeLines(input$text2, con)
     }
   )
 
