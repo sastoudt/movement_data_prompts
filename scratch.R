@@ -11,7 +11,7 @@ library(geojsonsf)
 library(leaftime)
 library(htmltools)
 
-
+library(sf)
 library(tidyverse)
 deer_coords <- do.call(rbind, st_geometry(deer)) %>% 
   as_tibble() %>% setNames(c("lon","lat"))
