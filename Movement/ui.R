@@ -20,10 +20,10 @@ library(htmltools)
 library(tidyverse)
 
 fluidPage(
-  navbarPage("Animal Movement Prompts",
+  navbarPage("Get inspired by animal movement...",
     theme = bs_theme(version = 5, bootswatch = "minty"),
     tabPanel(
-      "Deer",
+      "White-tailed Deer: At a Glance",
       card(
         card_header("What am I looking at?"),
         p("
@@ -55,6 +55,7 @@ fluidPage(
           card_header("Get writing! What do you notice? What do you wonder?"),
           p("As you watch the deer, free write as many noticings and wonderings as you can before the movie ends."),
           textAreaInput("text", "", "", height = "600px", width = "600px"),
+          p("When you are done, feel free to download your ideas so you have them for future reference."),
           downloadButton("downloadText", "Download Text"),
         ),
       ),
@@ -67,6 +68,6 @@ fluidPage(
         p("what do you notice, what do you wonder, 50 first lines, connect to dodge examples")
       )
     ),
-    tabPanel("")
+    tabPanel("White-tailed Deer: A Deeper Dive")
   )
 )
