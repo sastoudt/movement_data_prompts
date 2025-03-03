@@ -19,6 +19,36 @@ deer2 <- cbind.data.frame(
   Longitude = deer_coords$lon, Latitude = deer_coords$lat, color = ifelse(deer$id == "37", "dodgerblue", "orange")
 )
 
+data = cbind.data.frame(id = deer$id, date = deer$date, lon = deer_coords$lon, lat = deer_coords$lat)
+
+
+d1 = distHaversine(subset(data, id == 37)[,c("lon","lat")])
+d2 = distHaversine(subset(data, id == 38)[,c("lon","lat")])
+date1 = subset(data, id == 37)$date
+date2 = subset(data, id == 38)$date
+t1 = (date1 - date1[1])/60
+t2 =  (date2 - date2[1])/60
+t1 = t1[-1]
+t2 = t2[-1]
+cd1 = cumsum(d1)
+cd2 = cumsum(d2)
+
+dow1 = weekdays(date1)[-1]
+dow2 = weekdays(date2)[-1]
+
+time1 = format(as.POSIXct(date1), format = "%H:%M:%S")
+time2 = format(as.POSIXct(date2), format = "%H:%M:%S")
+time1 = time1[-1]
+time2 = time2[-1]
+
+
+id = c(rep("Deer 1", times = length(d1)), rep("Deer 2", times = length(d2)))
+
+toP = cbind.data.frame(distT=c(d1, d2), timeD = c(t1, t2), id=id, c_distT = c(cd1, cd2), dow = c(dow1, dow2), time = c(time1, time2))
+toP$time = as.POSIXct(toP$time, format = "%H:%M:%S")
+
+toP$dow <- factor(toP$dow, levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
+
 
 # Define server logic required to draw a histogram
 function(input, output, session) {
@@ -51,11 +81,10 @@ function(input, output, session) {
   )
 
   output$deer_home <- renderLeaflet({
-    dataH <- cbind.data.frame(id = deer$id, date = deer$date, lon = deer_coords$lon, lat = deer_coords$lat)
 
 
-    ch1 <- chull(subset(dataH, id == 37)[, c("lon", "lat")])
-    ch2 <- chull(subset(dataH, id == 38)[, c("lon", "lat")])
+    ch1 <- chull(subset(data, id == 37)[, c("lon", "lat")])
+    ch2 <- chull(subset(data, id == 38)[, c("lon", "lat")])
     ch1 <- c(ch1, ch1[1])
     ch2 <- c(ch2, ch2[1])
 
@@ -123,4 +152,24 @@ function(data, latlng) {
         )
       )
   })
+  
+  
+  output$distPlot<-renderPlot({
+  
+    toP2 = subset(toP, dow %in% input$dowchoice)
+
+    if(input$dist_type == "step"){
+      ggplot(toP2,aes(time, distT, col = id)) + geom_point()+ geom_line() + facet_wrap(~dow) + scale_x_datetime(date_labels = "%H:%M") +
+        theme_minimal() +
+        theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1)) 
+    }else{
+      ggplot(toP2,aes(time, c_distT, col = id)) + geom_point()+ geom_line() + facet_wrap(~dow) + scale_x_datetime(date_labels = "%H:%M") +
+        theme_minimal() +
+        theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1)) 
+    }
+   
+    
+  })
+  
+  
 }

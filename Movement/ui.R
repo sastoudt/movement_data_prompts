@@ -18,6 +18,8 @@ library(geojsonsf)
 library(leaftime)
 library(htmltools)
 library(tidyverse)
+library(geosphere)
+library(lubridate)
 
 fluidPage(
   navbarPage("Get inspired by animal movement...",
@@ -101,7 +103,17 @@ fluidPage(
           card_header("I'm interested in learning more about the deer's day-to-day travels."),
           p(""),
           ## toggles
+          radioButtons(
+            "dist_type", "Travel type:",
+            c(
+              "Step-by-step" = "step",
+              "Cumulative" = "cumul"
+            )
+          ),
+          checkboxGroupInput("dowchoice", "I'm interested in these days of the week:",
+                         unique(toP$dow), unique(toP$dow)),
           ## output
+        plotOutput("distPlot"),
         ),
         card(
           card_header("Get writing!"),
