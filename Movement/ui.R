@@ -31,7 +31,6 @@ fluidPage(
           Below, you'll see the paths of two individual deer over the course of a week in March 2005.
           "),
         HTML("<a href='https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/1365-2656.12198'>Check out the research paper here.</a>"),
-       
       ),
       layout_columns(
         card(
@@ -68,34 +67,58 @@ fluidPage(
         p("what do you notice, what do you wonder, 50 first lines, connect to dodge examples")
       )
     ),
-    tabPanel("White-tailed Deer: A Deeper Dive",
-             card(
-               card_header(""),
-               p(""),
-             ),
-             layout_columns(
-               card(
-                 card_header(""),
-                 p(""),
-                 ## toggles
-                 ## output
-               ),
-               card(
-                 card_header("Get writing!"),
-                 p(""),
-                 textAreaInput("text2", "", "", height = "600px", width = "600px"),
-                 p("When you are done, feel free to download your ideas so you have them for future reference."),
-                 downloadButton("downloadText2", "Download Text"),
-               ),
-             ),
-             card(
-               card_header("Writing Prompts"),
-               p("prompts to come")
-             ),
-             card(
-               card_header("Behind the Scenes Inspiration"),
-               p("")
-             )
-             )
+    tabPanel(
+      "White-tailed Deer: A Deeper Dive",
+      layout_columns(
+        card(
+          card_header("I'm interested in learning more about the deer's home ranges."),
+          p(""),
+          ## toggles
+          radioButtons(
+            "map_type2", "Map point of view:",
+            c(
+              "Human Elements" = "human",
+              "Nature Elements" = "nature"
+            )
+          ),
+          ## output
+          leafletOutput("deer_home"),
+        ),
+        card(
+          card_header("Get writing!"),
+          p(""),
+          textAreaInput("text2", "", "", height = "600px", width = "600px"),
+          p("When you are done, feel free to download your ideas so you have them for future reference."),
+          downloadButton("downloadText2", "Download Text"),
+        ),
+      ),
+      card(
+        card_header("Writing Prompts"),
+        p("prompts to come")
+      ),
+      layout_columns(
+        card(
+          card_header("I'm interested in learning more about the deer's day-to-day travels."),
+          p(""),
+          ## toggles
+          ## output
+        ),
+        card(
+          card_header("Get writing!"),
+          p(""),
+          textAreaInput("text3", "", "", height = "600px", width = "600px"),
+          p("When you are done, feel free to download your ideas so you have them for future reference."),
+          downloadButton("downloadText2", "Download Text"),
+        ),
+      ),
+      card(
+        card_header("Writing Prompts"),
+        p("prompts to come")
+      ),
+      card(
+        card_header("Behind the Scenes Inspiration"),
+        p("")
+      )
+    )
   )
 )
