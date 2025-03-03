@@ -72,22 +72,65 @@ function(data, latlng) {
 library(geosphere)
 
 
+
+
+
+
 d1 = distHaversine(subset(data, id == 37)[,c("lon","lat")])
 d2 = distHaversine(subset(data, id == 38)[,c("lon","lat")])
-t1 = diff(subset(data, id == 37)$date) 
-t2 = diff(subset(data, id == 38)$date) 
+date1 = subset(data, id == 37)$date
+date2 = subset(data, id == 38)$date
+#t1 = diff(date1) 
+#t2 = diff(date2) 
+t1 = (date1 - date1[1])/60
+t2 =  (date2 - date2[1])/60
+t1 = t1[-1]
+t2 = t2[-1]
+cd1 = cumsum(d1)
+cd2 = cumsum(d2)
+
+library(lubridate)
+
+dow1 = weekdays(date1)[-1]
+dow2 = weekdays(date2)[-1]
+
+time1 = format(as.POSIXct(date1), format = "%H:%M:%S")
+time2 = format(as.POSIXct(date2), format = "%H:%M:%S")
+time1 = time1[-1]
+time2 = time2[-1]
+
 
 id = c(rep("Deer 1", times = length(d1)), rep("Deer 2", times = length(d2)))
 
-toP = cbind.data.frame(distT=c(d1, d2), timeD = c(t1, t2), id=id)
+toP = cbind.data.frame(distT=c(d1, d2), timeD = c(t1, t2), id=id, c_distT = c(cd1, cd2), dow = c(dow1, dow2), time = c(time1, time2))
+toP$time = as.POSIXct(toP$time, format = "%H:%M:%S")
 
+## filter time
+## raw v. cumulative
 ggplot(toP, aes(timeD, distT, col = id)) + geom_point() + geom_line()
-## I'm interested in learning more about the interactions between the two deer.
 
-
+ggplot(toP, aes(timeD, c_distT, col = id)) + geom_point() + geom_line()
 
 
 ## I'm interested in learning more about the deer's daily patterns.
+
+toP$dow <- factor(toP$dow, levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
+
+
+
+ggplot(toP,aes(time, distT, col = id)) + geom_point()+ geom_line() + facet_wrap(~dow) + scale_x_datetime(date_labels = "%H:%M") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1)) 
+
+
+ggplot(toP,aes(time, c_distT, col = id)) + geom_point()+ geom_line() + facet_wrap(~dow) + scale_x_datetime(date_labels = "%H:%M") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1)) 
+
+
+
+
+## I'm interested in learning more about the interactions between the two deer.
 
 
 ## new tab: layering datasets
