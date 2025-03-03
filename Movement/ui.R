@@ -112,6 +112,11 @@ fluidPage(
           ),
           checkboxGroupInput("dowchoice", "I'm interested in these days of the week:",
                          unique(toP$dow), unique(toP$dow)),
+          sliderInput( 
+            "timechoice", "I'm interested in these times of the day", 
+            min = 0, max = 24, 
+            value = c(0, 24) 
+          ),
           ## output
         plotOutput("distPlot"),
         ),

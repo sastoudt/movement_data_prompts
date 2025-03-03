@@ -48,7 +48,7 @@ toP = cbind.data.frame(distT=c(d1, d2), timeD = c(t1, t2), id=id, c_distT = c(cd
 toP$time = as.POSIXct(toP$time, format = "%H:%M:%S")
 
 toP$dow <- factor(toP$dow, levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
-
+toP$hour <- hour(toP$time)
 
 # Define server logic required to draw a histogram
 function(input, output, session) {
@@ -156,14 +156,16 @@ function(data, latlng) {
   
   output$distPlot<-renderPlot({
   
-    toP2 = subset(toP, dow %in% input$dowchoice)
+    toP2 = subset(toP, toP$dow %in% input$dowchoice)
+    toP3 = subset(toP2, toP2$hour >= input$timechoice[1] & toP2$hour <= input$timechoice[2]  )
+   
 
     if(input$dist_type == "step"){
-      ggplot(toP2,aes(time, distT, col = id)) + geom_point()+ geom_line() + facet_wrap(~dow) + scale_x_datetime(date_labels = "%H:%M") +
+      ggplot(toP3,aes(time, distT, col = id)) + geom_point()+ geom_line() + facet_wrap(~dow) + scale_x_datetime(date_labels = "%H:%M") +
         theme_minimal() +
         theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1)) 
     }else{
-      ggplot(toP2,aes(time, c_distT, col = id)) + geom_point()+ geom_line() + facet_wrap(~dow) + scale_x_datetime(date_labels = "%H:%M") +
+      ggplot(toP3,aes(time, c_distT, col = id)) + geom_point()+ geom_line() + facet_wrap(~dow) + scale_x_datetime(date_labels = "%H:%M") +
         theme_minimal() +
         theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1)) 
     }
