@@ -71,7 +71,7 @@ fluidPage(
     ),
     tabPanel(
       "White-tailed Deer: A Deeper Dive",
-      layout_columns(
+      #layout_columns(
         card(
           card_header("I'm interested in learning more about the deer's home ranges."),
           p(""),
@@ -89,11 +89,11 @@ fluidPage(
         card(
           card_header("Get writing!"),
           p(""),
-          textAreaInput("text2", "", "", height = "600px", width = "600px"),
+          textAreaInput("text2", "", "", height = "200px", width = "800px"),
           p("When you are done, feel free to download your ideas so you have them for future reference."),
           downloadButton("downloadText2", "Download Text"),
         ),
-      ),
+      #),
       card(
         card_header("Writing Prompts"),
         p("prompts to come")
@@ -111,23 +111,28 @@ fluidPage(
             )
           ),
           checkboxGroupInput("dowchoice", "I'm interested in these days of the week:",
-                         unique(toP$dow), unique(toP$dow)),
+                         unique(toP$dow), unique(toP$dow))
+          ),
+        card(
           sliderInput( 
             "timechoice", "I'm interested in these times of the day", 
             min = 0, max = 24, 
             value = c(0, 24) 
           ),
+        )),
           ## output
+          card(
         plotOutput("distPlot"),
-        ),
+          )
+        ,
         card(
           card_header("Get writing!"),
           p(""),
-          textAreaInput("text3", "", "", height = "600px", width = "600px"),
+          textAreaInput("text3", "", "", height = "200px", width = "800px"),
           p("When you are done, feel free to download your ideas so you have them for future reference."),
           downloadButton("downloadText2", "Download Text"),
         ),
-      ),
+      #),
       card(
         card_header("Writing Prompts"),
         p("prompts to come")
