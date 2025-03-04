@@ -71,33 +71,8 @@ fluidPage(
     ),
     tabPanel(
       "White-tailed Deer: A Deeper Dive",
-      #layout_columns(
-        card(
-          card_header("I'm interested in learning more about the deer's home ranges."),
-          p(""),
-          ## toggles
-          radioButtons(
-            "map_type2", "Map point of view:",
-            c(
-              "Human Elements" = "human",
-              "Nature Elements" = "nature"
-            )
-          ),
-          ## output
-          leafletOutput("deer_home"),
-        ),
-        card(
-          card_header("Get writing!"),
-          p(""),
-          textAreaInput("text2", "", "", height = "200px", width = "800px"),
-          p("When you are done, feel free to download your ideas so you have them for future reference."),
-          downloadButton("downloadText2", "Download Text"),
-        ),
-      #),
-      card(
-        card_header("Writing Prompts"),
-        p("prompts to come")
-      ),
+      # layout_columns(
+
       layout_columns(
         card(
           card_header("I'm interested in learning more about the deer's day-to-day travels."),
@@ -110,29 +85,57 @@ fluidPage(
               "Cumulative" = "cumul"
             )
           ),
-          checkboxGroupInput("dowchoice", "I'm interested in these days of the week:",
-                         unique(toP$dow), unique(toP$dow))
-          ),
-        card(
-          sliderInput( 
-            "timechoice", "I'm interested in these times of the day", 
-            min = 0, max = 24, 
-            value = c(0, 24) 
-          ),
-        )),
-          ## output
-          card(
-        plotOutput("distPlot"),
+          sliderInput(
+            "timechoice", "I'm interested in these times of the day:",
+            min = 0, max = 24,
+            value = c(0, 24)
           )
-        ,
-        card(
-          card_header("Get writing!"),
-          p(""),
-          textAreaInput("text3", "", "", height = "200px", width = "800px"),
-          p("When you are done, feel free to download your ideas so you have them for future reference."),
-          downloadButton("downloadText2", "Download Text"),
         ),
-      #),
+        card(
+          checkboxGroupInput(
+            "dowchoice", "I'm interested in these days of the week:",
+            unique(toP$dow), unique(toP$dow)
+          ),
+        )
+      ),
+      ## output
+      card(
+        plotOutput("distPlot"),
+      ),
+      card(
+        card_header("Get writing!"),
+        p(""),
+        textAreaInput("text3", "", "", height = "200px", width = "800px"),
+        p("When you are done, feel free to download your ideas so you have them for future reference."),
+        downloadButton("downloadText2", "Download Text"),
+      ),
+      # ),
+      card(
+        card_header("Writing Prompts"),
+        p("prompts to come")
+      ),
+      card(
+        card_header("I'm interested in learning more about the deer's home ranges."),
+        p(""),
+        ## toggles
+        radioButtons(
+          "map_type2", "Map point of view:",
+          c(
+            "Human Elements" = "human",
+            "Nature Elements" = "nature"
+          )
+        ),
+        ## output
+        leafletOutput("deer_home"),
+      ),
+      card(
+        card_header("Get writing!"),
+        p(""),
+        textAreaInput("text2", "", "", height = "200px", width = "800px"),
+        p("When you are done, feel free to download your ideas so you have them for future reference."),
+        downloadButton("downloadText2", "Download Text"),
+      ),
+      # ),
       card(
         card_header("Writing Prompts"),
         p("prompts to come")
