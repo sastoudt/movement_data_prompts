@@ -72,10 +72,13 @@ fluidPage(
     tabPanel(
       "White-tailed Deer: A Deeper Dive",
       # layout_columns(
-
+      card(
+      card_header("I'm interested in learning more about the deer's day-to-day travels."),
+      ),
       layout_columns(
+      
         card(
-          card_header("I'm interested in learning more about the deer's day-to-day travels."),
+          
           p(""),
           ## toggles
           radioButtons(
@@ -94,7 +97,7 @@ fluidPage(
         card(
           checkboxGroupInput(
             "dowchoice", "I'm interested in these days of the week:",
-            unique(toP$dow), unique(toP$dow)
+            c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"), c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
           ),
         )
       ),

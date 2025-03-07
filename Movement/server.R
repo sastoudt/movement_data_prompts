@@ -9,49 +9,12 @@
 
 library(shiny)
 
-data(deer)
-deer_coords <- do.call(rbind, st_geometry(deer)) %>%
-  as_tibble() %>%
-  setNames(c("lon", "lat"))
 
-deer2 <- cbind.data.frame(
-  start = gsub(" EST", "", deer$date), end = "2005-03-13 18:47:00",
-  Longitude = deer_coords$lon, Latitude = deer_coords$lat, color = ifelse(deer$id == "37", "dodgerblue", "orange")
-)
-
-data <- cbind.data.frame(id = deer$id, date = deer$date, lon = deer_coords$lon, lat = deer_coords$lat)
-
-
-d1 <- distHaversine(subset(data, id == 37)[, c("lon", "lat")])
-d2 <- distHaversine(subset(data, id == 38)[, c("lon", "lat")])
-date1 <- subset(data, id == 37)$date
-date2 <- subset(data, id == 38)$date
-t1 <- (date1 - date1[1]) / 60
-t2 <- (date2 - date2[1]) / 60
-t1 <- t1[-1]
-t2 <- t2[-1]
-cd1 <- cumsum(d1)
-cd2 <- cumsum(d2)
-
-dow1 <- weekdays(date1)[-1]
-dow2 <- weekdays(date2)[-1]
-
-time1 <- format(as.POSIXct(date1), format = "%H:%M:%S")
-time2 <- format(as.POSIXct(date2), format = "%H:%M:%S")
-time1 <- time1[-1]
-time2 <- time2[-1]
-
-
-id <- c(rep("Deer 1", times = length(d1)), rep("Deer 2", times = length(d2)))
-
-toP <- cbind.data.frame(distT = c(d1, d2), timeD = c(t1, t2), id = id, c_distT = c(cd1, cd2), dow = c(dow1, dow2), time = c(time1, time2))
-toP$time <- as.POSIXct(toP$time, format = "%H:%M:%S")
-
-toP$dow <- factor(toP$dow, levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
-toP$hour <- hour(toP$time)
 
 # Define server logic required to draw a histogram
 function(input, output, session) {
+  
+  
   output$downloadText <- downloadHandler(
     filename = function() {
       paste("draft-deer-glance-", gsub(" ", "_", Sys.time()), ".txt", sep = "")
@@ -79,8 +42,73 @@ function(input, output, session) {
       writeLines(input$text3, con)
     }
   )
+  
+  data_deer1 <- reactive({
+    data(deer)
+    deer_coords <- do.call(rbind, st_geometry(deer)) %>%
+      as_tibble() %>%
+      setNames(c("lon", "lat"))
+    
+    
+    data <- cbind.data.frame(id = deer$id, date = deer$date, lon = deer_coords$lon, lat = deer_coords$lat)
+    
+    data
+    
+  })
+  
+  data_deer2 <- reactive({
+    data(deer)
+    deer_coords <- do.call(rbind, st_geometry(deer)) %>%
+      as_tibble() %>%
+      setNames(c("lon", "lat"))
+    
+    deer2 <- cbind.data.frame(
+      start = gsub(" EST", "", deer$date), end = "2005-03-13 18:47:00",
+      Longitude = deer_coords$lon, Latitude = deer_coords$lat, color = ifelse(deer$id == "37", "dodgerblue", "orange")
+    )
+    
+    deer2
+    
+  })
+  
+  data_toP <- reactive({ 
+    
+    data = data_deer1()
+    d1 <- distHaversine(subset(data, id == 37)[, c("lon", "lat")])
+    d2 <- distHaversine(subset(data, id == 38)[, c("lon", "lat")])
+    date1 <- subset(data, id == 37)$date
+    date2 <- subset(data, id == 38)$date
+    t1 <- (date1 - date1[1]) / 60
+    t2 <- (date2 - date2[1]) / 60
+    t1 <- t1[-1]
+    t2 <- t2[-1]
+    cd1 <- cumsum(d1)
+    cd2 <- cumsum(d2)
+    
+    dow1 <- weekdays(date1)[-1]
+    dow2 <- weekdays(date2)[-1]
+    
+    time1 <- format(as.POSIXct(date1), format = "%H:%M:%S")
+    time2 <- format(as.POSIXct(date2), format = "%H:%M:%S")
+    time1 <- time1[-1]
+    time2 <- time2[-1]
+    
+    
+    id <- c(rep("Deer 1", times = length(d1)), rep("Deer 2", times = length(d2)))
+    
+    toP <- cbind.data.frame(distT = c(d1, d2), timeD = c(t1, t2), id = id, c_distT = c(cd1, cd2), dow = c(dow1, dow2), time = c(time1, time2))
+    toP$time <- as.POSIXct(toP$time, format = "%H:%M:%S")
+    
+    toP$dow <- factor(toP$dow, levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
+    toP$hour <- hour(toP$time)
+    
+    toP
+  })
+  
+
 
   output$deer_home <- renderLeaflet({
+    data = data_deer1()
     ch1 <- chull(subset(data, id == 37)[, c("lon", "lat")])
     ch2 <- chull(subset(data, id == 38)[, c("lon", "lat")])
     ch1 <- c(ch1, ch1[1])
@@ -93,7 +121,7 @@ function(input, output, session) {
     map_to_use <- ifelse(input$map_type2 == "human", providers$OpenStreetMap, providers$Esri.NatGeoWorldMap)
 
 
-    leaflet(geojsonio::geojson_json(deer2)) %>%
+    leaflet(geojsonio::geojson_json(data_deer2())) %>%
       addProviderTiles(map_to_use) %>%
       addPolylines(data = ch1p, lng = ~lon, lat = ~lat, col = "dodgerblue") %>%
       addPolylines(data = ch2p, lng = ~lon, lat = ~lat, col = "orange") %>%
@@ -120,12 +148,17 @@ function(data, latlng) {
         )
       )
   })
+  
+  
 
 
   output$deer <- renderLeaflet({
+  
+    
+    
     map_to_use <- ifelse(input$map_type == "human", providers$OpenStreetMap, providers$Esri.NatGeoWorldMap)
 
-    leaflet(geojsonio::geojson_json(deer2)) %>%
+    leaflet(geojsonio::geojson_json(data_deer2())) %>%
       addProviderTiles(map_to_use) %>%
       setView(-96.39, 34.77, 14) %>%
       addTimeline(
@@ -150,9 +183,14 @@ function(data, latlng) {
         )
       )
   })
+  
+  
 
 
   output$distPlot <- renderPlot({
+    
+    toP = data_toP()
+    
     toP2 <- subset(toP, toP$dow %in% input$dowchoice)
     toP3 <- subset(toP2, toP2$hour >= input$timechoice[1] & toP2$hour <= input$timechoice[2])
 
