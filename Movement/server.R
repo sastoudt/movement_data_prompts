@@ -43,6 +43,15 @@ function(input, output, session) {
     }
   )
   
+  output$downloadText4 <- downloadHandler(
+    filename = function() {
+      paste("draft-shark2-", gsub(" ", "_", Sys.time()), ".txt", sep = "")
+    },
+    content = function(con) {
+      writeLines(input$text4, con)
+    }
+  )
+  
   data_deer1 <- reactive({
     data(deer)
     deer_coords <- do.call(rbind, st_geometry(deer)) %>%
@@ -214,5 +223,47 @@ function(data, latlng) {
         theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1)) +
         scale_color_manual(values = c("Deer 1" = "dodgerblue", "Deer 2" = "orange"))
     }
+  })
+  
+  
+  output$shark_distPlot <- renderPlotly({
+    data <- read.csv("data/great_whites.csv", stringsAsFactors = FALSE)
+    
+    
+    data$observed_on <- as.Date(data$observed_on, format = "%Y-%m-%d")
+    data$year <- as.numeric(format(data$observed_on, format = "%Y"))  # Convert to numeric
+    
+    data$decade <- paste0(floor(data$year / 10) * 10)
+    decade_colors <- c("1950" = "firebrick4", "1970" = "orange2","1980" = "maroon",
+                       "1990" = "darkgreen", "2000" = "darkblue", "2010" = "purple", 
+                       "2020" = "darkcyan")
+    
+    decade_shapes <- c("1950" = 1, "1970" = 2,"1980" = 10,
+                       "1990" = 7, "2000" = 5, "2010" = 6, 
+                       "2020" = 4)
+    selected_decades <- as.numeric(input$select)
+    filtered_data <- data %>% filter(decade %in% selected_decades)
+    
+    p <- ggplot() + 
+      borders("world", colour = "darkgrey", fill = "darkgrey") + 
+      geom_point(data = filtered_data, aes(x = longitude, y = latitude, color = factor(decade),shape = factor(decade)), 
+                 size = 3) +
+      xlab("Longitude") + 
+      ylab("Latitude") + 
+      theme_void() + 
+      labs(color = "Decade", shape = "Decade") + 
+      theme(legend.position = 'bottom', 
+            panel.background = element_rect(fill = "powderblue",
+                                            colour = "powderblue",
+                                            size = 0.5, linetype = 'solid'),
+            panel.grid.major = element_line(size = 0.5, linetype = 'solid',
+                                            colour = "white"), 
+            panel.grid.minor = element_line(size = 0.25, linetype = 'solid',
+                                            colour = "white"),
+            plot.title = element_text(hjust = 0.5)) +
+      #labs(title = 'Great White Shark Spottings by Decade') +
+      coord_cartesian(xlim = c(-175, 175), ylim = c(-55, 55)) +
+      scale_color_manual(values = decade_colors) + scale_shape_manual(values = decade_shapes)
+    ggplotly(p, hoverinfo = data$observed_on)
   })
 }

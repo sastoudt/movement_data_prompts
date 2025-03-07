@@ -20,10 +20,64 @@ library(htmltools)
 library(tidyverse)
 library(geosphere)
 library(lubridate)
+library(plotly)
+library(RColorBrewer)
 
 fluidPage(
-  navbarPage("Get inspired by animal movement...",
+  navbarPage("Get inspired by animal data...",
     theme = bs_theme(version = 5, bootswatch = "minty"),
+    tabPanel(
+      "Who are we, and what is this?",
+      card(
+        card_header("Our Goal"),
+        p("We are a small team from Bucknell University (Elinam Agbo, Shaheryar Asghar, Caitlyn Hickey, and Sara Stoudt) sponsored by the Dominguez Center for Data Science,
+          who have partnered with The Dodge to combine our two passions: Data Science and Nature. We have been developing different apps, like this one, to inspire creative writing based on real-world data!"), 
+        br(" Our team encourages you to explore the data yourself and try to find a story hidden between the data points. We hope to see your stories come to life.")
+      ),
+      card(
+        card_header("Our Inspiration"),
+         p( "Caitlyn: I was inspired to find data on sharks after seeing a shark-tracking bracelet my sister bought. With the purchase of a bracelet, she was given access to the location of a shark through an app. We watched the shark swim along the East Coast and contrived stories about what it was doing. In our minds, the shark was on a food tour trying to find the tastiest surfers."),
+     p("Shaheryar: Coming soon..."),
+     p("Sara: Coming soon...")
+         )
+    ),
+    tabPanel(
+      "Great White Sharks: At a Glance",
+      card(
+        card_header("What am I looking at?"),
+        p("Below is an interactive map of Great White Shark Spottings. The raw data was exported from iNaturalist and contains the user data, geolocation, and time of each shark observation. Each point represents a Great White shark spotting submitted by a user. Hover over the points to find out more information about the sighting!" )
+      ),
+      #layout_columns(
+        card( #theme = bs_theme(preset = "minty"),
+          #class = "card text-white bg-primary mb-3",
+          card_header("Show me the data"),
+          #p("Select Decade(s)"),
+          ### put interactive widget here
+          selectInput("select", label = h3("Select  Decade(s)"), 
+                      choices = list("2020" = 2020, "2010" = 2010, "2000" = 2000,"1990" = 1990,
+                                     "1980" = 1980,"1970" = 1970, "1950" = 1950), 
+                      selected = 1, multiple = TRUE), 
+          plotlyOutput(outputId = "shark_distPlot"), height = 750
+        ),
+      card(
+        card_header("What do you notice? What do you wonder?"),
+        p("What if the same shark visited a location in multiple decades? What are they looking for? Is there something special about that place?"),
+        br("Consider an isolated data point. Why would a shark want to travel alone in a new location? How did they get there and where are they coming from?"),
+        br("Why are the majority of the spottings on the coast? Why not the middle of the ocean? Is there something the sharks are afraid of? How do they feel about the people on the beach?"
+        ),
+      ),
+      card(
+        card_header("Get writing!"),
+        p(""),
+        textAreaInput("text4", "", "", height = "200px", width = "800px"),
+        p("When you are done, feel free to download your ideas so you have them for future reference."),
+        downloadButton("downloadText4", "Download Text"),
+      ),
+     # ),
+    
+    ),
+    
+    
     tabPanel(
       "White-tailed Deer: At a Glance",
       card(
