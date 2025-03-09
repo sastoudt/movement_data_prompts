@@ -45,12 +45,26 @@ function(input, output, session) {
   
   output$downloadText4 <- downloadHandler(
     filename = function() {
-      paste("draft-shark2-", gsub(" ", "_", Sys.time()), ".txt", sep = "")
+      paste("draft-shark-", gsub(" ", "_", Sys.time()), ".txt", sep = "")
     },
     content = function(con) {
       writeLines(input$text4, con)
     }
   )
+  
+  output$downloadText5 <- downloadHandler(
+    filename = function() {
+      paste("draft-np-", gsub(" ", "_", Sys.time()), ".txt", sep = "")
+    },
+    content = function(con) {
+      writeLines(input$text5, con)
+    }
+  )
+  
+  data_nps <- reactive({
+    species_data <- read.csv("data/most_visited_nps_species_data.csv", stringsAsFactors = FALSE)
+    species_data
+  })
   
   data_deer1 <- reactive({
     data(deer)
@@ -193,6 +207,29 @@ function(data, latlng) {
       )
   })
   
+  output$speciesPlot <- renderPlot({
+    species_data <- data_nps()
+    # Filter data based on selected category
+    filtered_data <- species_data %>%
+      filter(CategoryName == input$species_category) %>%
+      group_by(ParkName) %>%
+      summarise(Observations = sum(Observations, na.rm = TRUE)) %>%
+      arrange(desc(Observations))
+    
+    # Ensure there is data to plot
+    validate(
+      need(nrow(filtered_data) > 0, "No data available for this category.")
+    )
+    
+    # Create the bar plot
+    ggplot(filtered_data, aes(x = reorder(ParkName, Observations), y = Observations)) +
+      geom_bar(stat = "identity", fill = "steelblue") +
+      coord_flip() +  # Flip axis to prevent overlapping names
+      labs(title = paste("Number of", input$species_category, "in National Parks"),
+           x = "National Park", y = "Total Observations") +
+      theme_minimal()
+  })
+  
   
 
 
@@ -266,4 +303,32 @@ function(data, latlng) {
       scale_color_manual(values = decade_colors) + scale_shape_manual(values = decade_shapes)
     ggplotly(p, hoverinfo = data$observed_on)
   })
+  
+  # Countdown timer logic
+  timer <- reactiveVal(300)
+  active <- reactiveVal(FALSE)
+  
+  output$timeleft <- renderText({
+    paste("Time left:", seconds_to_period(timer()))
+  })
+  
+  observe({
+    invalidateLater(1000, session)
+    isolate({
+      if (active()) {
+        timer(timer() - 1)
+        if (timer() < 1) {
+          active(FALSE)
+          showModal(modalDialog(
+            title = "Time's up!",
+            "Countdown completed!"
+          ))
+        }
+      }
+    })
+  })
+  
+  observeEvent(input$start, { active(TRUE) })
+  observeEvent(input$stop, { active(FALSE) })
+  observeEvent(input$reset, { timer(input$seconds) })
 }

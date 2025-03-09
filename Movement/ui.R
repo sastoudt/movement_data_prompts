@@ -24,7 +24,7 @@ library(plotly)
 library(RColorBrewer)
 
 fluidPage(
-  navbarPage("Get inspired by animal data...",
+  navbarPage("Facing the blank page? Get inspired by animal data...",
     theme = bs_theme(version = 5, bootswatch = "minty"),
     tabPanel(
       "Who are we, and what is this?",
@@ -38,9 +38,76 @@ fluidPage(
         card_header("Our Inspiration"),
          p( "Caitlyn: I was inspired to find data on sharks after seeing a shark-tracking bracelet my sister bought. With the purchase of a bracelet, she was given access to the location of a shark through an app. We watched the shark swim along the East Coast and contrived stories about what it was doing. In our minds, the shark was on a food tour trying to find the tastiest surfers."),
      p("Shaheryar: Coming soon..."),
-     p("Sara: Coming soon...")
+     p("Sara: Coming soon..."),
+     p("Throughout developing this app, we took inspiration from pieces published in The Dodge. Here is a list of what we read:"),
+     HTML("<a href='https://www.thedodgemag.com/christopherlinforth1'>Homesick by Christopher Linforth</a>"),
+     HTML("<a href='https://www.thedodgemag.com/piyalimukherjee1'>Death is a Name Spelled in Stripes by Piyali Mukherjee </a>"),
+     HTML("<a href='https://www.thedodgemag.com/violetagarciamendoza1'>Deathbed Phenomena and Incomplete Abecedarian at the End of the Once World by Victoria Garcia-Mendoza </a>"),
+     HTML("<a href='https://cymbals-corn-mx5t.squarespace.com/joeannhart1'>Ah! by Joeann Hart</a>"),
+     HTML("<a href='https://cymbals-corn-mx5t.squarespace.com/brittneycorrigan1'>Why Did the Chicken Remix by Brittney Corrigan</a>"),
+     HTML("<a href='https://cymbals-corn-mx5t.squarespace.com/rbminer1'>The Lung Capacity of Aquatic Mammals by R.B. Miner</a>"),
+     HTML("<a href='https://www.thedodgemag.com/jondoughboy1'>The North American Blizzard of 1996 by Jon Doughboy</a>"),
+     HTML("<a href='https://www.thedodgemag.com/elizabethlevinson1'>like rabbits by Elizabeth Joy Levinson</a>"),
+     HTML("<a href='https://www.thedodgemag.com/lieselhamilton1'>On Weeds and Healing by Liesel Hamilton</a>"),
+     HTML("<a href='https://www.thedodgemag.com/mollyweisgrau1'>Animal Planet by Molly Weisgrau</a>"),
+     HTML("<a href='https://www.thedodgemag.com/brendangillen1'> Tree Food by Brendan Gillen</a>"),
+
+     
+     HTML("<a href='https://www.nytimes.com/column/whats-going-on-in-this-graph'>The 'what do you notice? what do you wonder?' framework is inspired by the New York Times' What's Going On in This Graph series.</a>"),
+     HTML("<a href='https://gizmodo.com/the-weirdest-story-ideas-come-from-your-own-obsessions-5565717'>The idea to use a timer to just record as mcuh as possible from the graph to get started is inspired by the 'write 50 first sentences' prompt found here.</a>"),
+       
          )
     ),
+    tabPanel(
+      "National Parks: At a Glance",
+      card(
+        card_header("What am I looking at?"),
+        p("The National Park Service publishes a database of animal and plant species identified in individual national parks and verified by evidence — observations, vouchers, or reports that document the presence of a species in a park. All park species records are available to the public on the National Park Species portal, with exceptions for sensitive species where data sharing might pose a risk.")
+      ),
+      layout_columns(
+        card(
+          card_header("Show me the data!"),
+          selectInput("species_category", "Choose a Species Category:", choices = c(
+            "Mammal"  ,              "Bird"   ,               "Reptile"        ,       "Amphibian"   ,          "Fish"  ,               
+            "Vascular Plant"  ,      "Crab/Lobster/Shrimp" ,  "Slug/Snail"  ,          "Spider/Scorpion" ,      "Insect"   ,            
+            "Other Non-vertebrates", "Non-vascular Plant"  ,  "Fungi"          ,       "Chromista"    ,         "Protozoa"    ,         
+            "Bacteria")),
+          plotOutput(outputId = "speciesPlot")
+        ),
+        
+        card(
+          card_header("What do you notice? What do you wonder?"),
+          #p("Write down your thoughts on biodiversity trends."),
+          textAreaInput("text5", "", "", height = "500px", width = "100%"),
+          p("When you are done, feel free to download your ideas so you have them for future reference."),
+          
+          downloadButton("downloadText5", "Download Notes")
+        )
+      ),
+      card(
+        card_header("Countdown Timer"),
+        p("Need some accountability? Use this timer for brainstorming above."),
+        actionButton('start','Start'),
+        actionButton('stop','Stop'),
+        actionButton('reset','Reset'),
+        numericInput('seconds','Seconds:', value=300, min=0, max=99999, step=1),
+        textOutput('timeleft')
+      ),
+      card(
+        card_header("If you get stuck, use these questions to explore biodiversity insights:"),
+        #p("Use these questions to explore biodiversity insights:"),
+        tags$ul(
+          tags$li("🌿 Which parks are biodiversity hotspots? What explains the patterns?"),
+          tags$li("🦉 Are certain species naturally rare or impacted by human activity?"),
+          tags$li("🏕️ How do highly visited parks compare to less visited ones?"),
+          tags$li("🌍 Are species distributions shifting over time?")
+        )
+      )
+    ),
+    
+    
+    
+    
     tabPanel(
       "Great White Sharks: At a Glance",
       card(
@@ -50,7 +117,7 @@ fluidPage(
       #layout_columns(
         card( #theme = bs_theme(preset = "minty"),
           #class = "card text-white bg-primary mb-3",
-          card_header("Show me the data"),
+          card_header("Show me the data!"),
           #p("Select Decade(s)"),
           ### put interactive widget here
           selectInput("select", label = h3("Select  Decade(s)"), 
@@ -60,19 +127,20 @@ fluidPage(
           plotlyOutput(outputId = "shark_distPlot"), height = 750
         ),
       card(
-        card_header("What do you notice? What do you wonder?"),
+        card_header("Get writing! What do you notice? What do you wonder?"),
+        p(""),
+        textAreaInput("text4", "", "", height = "200px", width = "800px"),
+        p("When you are done, feel free to download your ideas so you have them for future reference."),
+        downloadButton("downloadText4", "Download Notes"),
+      ),
+      card(
+        card_header("If you get stuck, consider these prompts:"),
         p("What if the same shark visited a location in multiple decades? What are they looking for? Is there something special about that place?"),
         br("Consider an isolated data point. Why would a shark want to travel alone in a new location? How did they get there and where are they coming from?"),
         br("Why are the majority of the spottings on the coast? Why not the middle of the ocean? Is there something the sharks are afraid of? How do they feel about the people on the beach?"
         ),
       ),
-      card(
-        card_header("Get writing!"),
-        p(""),
-        textAreaInput("text4", "", "", height = "200px", width = "800px"),
-        p("When you are done, feel free to download your ideas so you have them for future reference."),
-        downloadButton("downloadText4", "Download Text"),
-      ),
+     
      # ),
     
     ),
@@ -111,17 +179,14 @@ fluidPage(
           p("As you watch the deer, free write as many noticings and wonderings as you can before the movie ends."),
           textAreaInput("text", "", "", height = "600px", width = "600px"),
           p("When you are done, feel free to download your ideas so you have them for future reference."),
-          downloadButton("downloadText", "Download Text"),
+          downloadButton("downloadText", "Download Notes"),
         ),
       ),
       card(
         card_header("Writing Prompts"),
         p("prompts to come")
       ),
-      card(
-        card_header("Behind the Scenes Inspiration"),
-        p("what do you notice, what do you wonder, 50 first lines, connect to dodge examples")
-      )
+    
     ),
     tabPanel(
       "White-tailed Deer: A Deeper Dive",
@@ -164,7 +229,7 @@ fluidPage(
         p(""),
         textAreaInput("text3", "", "", height = "200px", width = "800px"),
         p("When you are done, feel free to download your ideas so you have them for future reference."),
-        downloadButton("downloadText2", "Download Text"),
+        downloadButton("downloadText2", "Download Notes"),
       ),
       # ),
       card(
@@ -190,7 +255,7 @@ fluidPage(
         p(""),
         textAreaInput("text2", "", "", height = "200px", width = "800px"),
         p("When you are done, feel free to download your ideas so you have them for future reference."),
-        downloadButton("downloadText2", "Download Text"),
+        downloadButton("downloadText2", "Download Notes"),
       ),
       # ),
       card(
