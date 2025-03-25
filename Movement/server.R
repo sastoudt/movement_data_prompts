@@ -8,13 +8,13 @@
 #
 
 library(shiny)
-
+library(maps)
 
 
 # Define server logic required to draw a histogram
 function(input, output, session) {
   
-  
+  #### download texts ####
   output$downloadText <- downloadHandler(
     filename = function() {
       paste("draft-deer-glance-", gsub(" ", "_", Sys.time()), ".txt", sep = "")
@@ -42,7 +42,7 @@ function(input, output, session) {
       writeLines(input$text3, con)
     }
   )
-  
+
   output$downloadText4 <- downloadHandler(
     filename = function() {
       paste("draft-shark-", gsub(" ", "_", Sys.time()), ".txt", sep = "")
@@ -51,7 +51,7 @@ function(input, output, session) {
       writeLines(input$text4, con)
     }
   )
-  
+
   output$downloadText5 <- downloadHandler(
     filename = function() {
       paste("draft-np-", gsub(" ", "_", Sys.time()), ".txt", sep = "")
@@ -60,43 +60,40 @@ function(input, output, session) {
       writeLines(input$text5, con)
     }
   )
-  
+#### data ####
   data_nps <- reactive({
     species_data <- read.csv("data/most_visited_nps_species_data.csv", stringsAsFactors = FALSE)
     species_data
   })
-  
+
   data_deer1 <- reactive({
     data(deer)
     deer_coords <- do.call(rbind, st_geometry(deer)) %>%
       as_tibble() %>%
       setNames(c("lon", "lat"))
-    
-    
+
+
     data <- cbind.data.frame(id = deer$id, date = deer$date, lon = deer_coords$lon, lat = deer_coords$lat)
-    
+
     data
-    
   })
-  
+
   data_deer2 <- reactive({
     data(deer)
     deer_coords <- do.call(rbind, st_geometry(deer)) %>%
       as_tibble() %>%
       setNames(c("lon", "lat"))
-    
+
     deer2 <- cbind.data.frame(
       start = gsub(" EST", "", deer$date), end = "2005-03-13 18:47:00",
       Longitude = deer_coords$lon, Latitude = deer_coords$lat, color = ifelse(deer$id == "37", "dodgerblue", "orange")
     )
-    
+
     deer2
-    
   })
-  
-  data_toP <- reactive({ 
-    
-    data = data_deer1()
+
+  data_toP <- reactive({
+    data <- data_deer1()
     d1 <- distHaversine(subset(data, id == 37)[, c("lon", "lat")])
     d2 <- distHaversine(subset(data, id == 38)[, c("lon", "lat")])
     date1 <- subset(data, id == 37)$date
@@ -107,31 +104,31 @@ function(input, output, session) {
     t2 <- t2[-1]
     cd1 <- cumsum(d1)
     cd2 <- cumsum(d2)
-    
+
     dow1 <- weekdays(date1)[-1]
     dow2 <- weekdays(date2)[-1]
-    
+
     time1 <- format(as.POSIXct(date1), format = "%H:%M:%S")
     time2 <- format(as.POSIXct(date2), format = "%H:%M:%S")
     time1 <- time1[-1]
     time2 <- time2[-1]
-    
-    
+
+
     id <- c(rep("Deer 1", times = length(d1)), rep("Deer 2", times = length(d2)))
-    
+
     toP <- cbind.data.frame(distT = c(d1, d2), timeD = c(t1, t2), id = id, c_distT = c(cd1, cd2), dow = c(dow1, dow2), time = c(time1, time2))
     toP$time <- as.POSIXct(toP$time, format = "%H:%M:%S")
-    
+
     toP$dow <- factor(toP$dow, levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"))
     toP$hour <- hour(toP$time)
-    
+
     toP
   })
-  
 
+#### deer ####
 
   output$deer_home <- renderLeaflet({
-    data = data_deer1()
+    data <- data_deer1()
     ch1 <- chull(subset(data, id == 37)[, c("lon", "lat")])
     ch2 <- chull(subset(data, id == 38)[, c("lon", "lat")])
     ch1 <- c(ch1, ch1[1])
@@ -171,14 +168,11 @@ function(data, latlng) {
         )
       )
   })
-  
-  
+
+
 
 
   output$deer <- renderLeaflet({
-  
-    
-    
     map_to_use <- ifelse(input$map_type == "human", providers$OpenStreetMap, providers$Esri.NatGeoWorldMap)
 
     leaflet(geojsonio::geojson_json(data_deer2())) %>%
@@ -206,37 +200,13 @@ function(data, latlng) {
         )
       )
   })
-  
-  output$speciesPlot <- renderPlot({
-    species_data <- data_nps()
-    # Filter data based on selected category
-    filtered_data <- species_data %>%
-      filter(CategoryName == input$species_category) %>%
-      group_by(ParkName) %>%
-      summarise(Observations = sum(Observations, na.rm = TRUE)) %>%
-      arrange(desc(Observations))
-    
-    # Ensure there is data to plot
-    validate(
-      need(nrow(filtered_data) > 0, "No data available for this category.")
-    )
-    
-    # Create the bar plot
-    ggplot(filtered_data, aes(x = reorder(ParkName, Observations), y = Observations)) +
-      geom_bar(stat = "identity", fill = "steelblue") +
-      coord_flip() +  # Flip axis to prevent overlapping names
-      labs(title = paste("Number of", input$species_category, "in National Parks"),
-           x = "National Park", y = "Total Observations") +
-      theme_minimal()
-  })
-  
-  
+
+
 
 
   output$distPlot <- renderPlot({
-    
-    toP = data_toP()
-    
+    toP <- data_toP()
+
     toP2 <- subset(toP, toP$dow %in% input$dowchoice)
     toP3 <- subset(toP2, toP2$hour >= input$timechoice[1] & toP2$hour <= input$timechoice[2])
 
@@ -261,57 +231,105 @@ function(data, latlng) {
         scale_color_manual(values = c("Deer 1" = "dodgerblue", "Deer 2" = "orange"))
     }
   })
+  #### national parks ####
   
-  
-  output$shark_distPlot <- renderPlotly({
-    data <- read.csv("data/great_whites.csv", stringsAsFactors = FALSE)
+  output$speciesPlot <- renderPlot({
+    species_data <- data_nps()
+    # Filter data based on selected category
+    filtered_data <- species_data %>%
+      filter(CategoryName == input$species_category) %>%
+      group_by(ParkName) %>%
+      summarise(Observations = sum(Observations, na.rm = TRUE)) %>%
+      arrange(desc(Observations))
     
+    # Ensure there is data to plot
+    validate(
+      need(nrow(filtered_data) > 0, "No data available for this category.")
+    )
     
-    data$observed_on <- as.Date(data$observed_on, format = "%Y-%m-%d")
-    data$year <- as.numeric(format(data$observed_on, format = "%Y"))  # Convert to numeric
-    
-    data$decade <- paste0(floor(data$year / 10) * 10)
-    decade_colors <- c("1950" = "firebrick4", "1970" = "orange2","1980" = "maroon",
-                       "1990" = "darkgreen", "2000" = "darkblue", "2010" = "purple", 
-                       "2020" = "darkcyan")
-    
-    decade_shapes <- c("1950" = 1, "1970" = 2,"1980" = 10,
-                       "1990" = 7, "2000" = 5, "2010" = 6, 
-                       "2020" = 4)
-    selected_decades <- as.numeric(input$select)
-    filtered_data <- data %>% filter(decade %in% selected_decades)
-    
-    p <- ggplot() + 
-      borders("world", colour = "darkgrey", fill = "darkgrey") + 
-      geom_point(data = filtered_data, aes(x = longitude, y = latitude, color = factor(decade),shape = factor(decade)), 
-                 size = 3) +
-      xlab("Longitude") + 
-      ylab("Latitude") + 
-      theme_void() + 
-      labs(color = "Decade", shape = "Decade") + 
-      theme(legend.position = 'bottom', 
-            panel.background = element_rect(fill = "powderblue",
-                                            colour = "powderblue",
-                                            size = 0.5, linetype = 'solid'),
-            panel.grid.major = element_line(size = 0.5, linetype = 'solid',
-                                            colour = "white"), 
-            panel.grid.minor = element_line(size = 0.25, linetype = 'solid',
-                                            colour = "white"),
-            plot.title = element_text(hjust = 0.5)) +
-      #labs(title = 'Great White Shark Spottings by Decade') +
-      coord_cartesian(xlim = c(-175, 175), ylim = c(-55, 55)) +
-      scale_color_manual(values = decade_colors) + scale_shape_manual(values = decade_shapes)
-    ggplotly(p, hoverinfo = data$observed_on)
+    # Create the bar plot
+    ggplot(filtered_data, aes(x = reorder(ParkName, Observations), y = Observations)) +
+      geom_bar(stat = "identity", fill = "steelblue") +
+      coord_flip() + # Flip axis to prevent overlapping names
+      labs(
+        title = paste("Number of", input$species_category, "in National Parks"),
+        x = "National Park", y = "Total Observations"
+      ) +
+      theme_minimal()
   })
   
+  #### shark data ####
+
+  output$shark_distPlot <- renderPlotly({
+    data <- read.csv("data/great_whites.csv", stringsAsFactors = FALSE)
+
+
+    data$observed_on <- as.Date(data$observed_on, format = "%Y-%m-%d")
+    data$year <- as.numeric(format(data$observed_on, format = "%Y")) # Convert to numeric
+
+    data$decade <- paste0(floor(data$year / 10) * 10)
+    decade_colors <- c(
+      "1950" = "firebrick4", "1970" = "orange2", "1980" = "maroon",
+      "1990" = "darkgreen", "2000" = "darkblue", "2010" = "purple",
+      "2020" = "darkcyan"
+    )
+
+    decade_shapes <- c(
+      "1950" = 1, "1970" = 2, "1980" = 10,
+      "1990" = 7, "2000" = 5, "2010" = 6,
+      "2020" = 4
+    )
+    selected_decades <- as.numeric(input$select)
+    filtered_data <- data %>% filter(decade %in% selected_decades)
+
+    p <- ggplot() +
+      borders("world", colour = "darkgrey", fill = "darkgrey") +
+      geom_point(
+        data = filtered_data, aes(
+          x = longitude, y = latitude, color = factor(decade), shape = factor(decade),
+          text = observed_on_string
+        ),
+        size = 3
+      ) +
+      xlab("Longitude") +
+      ylab("Latitude") +
+      theme_void() +
+      labs(color = "Decade", shape = "Decade") +
+      theme(
+        legend.position = "bottom",
+        panel.background = element_rect(
+          fill = "powderblue",
+          colour = "powderblue",
+          size = 0.5, linetype = "solid"
+        ),
+        panel.grid.major = element_line(
+          size = 0.5, linetype = "solid",
+          colour = "white"
+        ),
+        panel.grid.minor = element_line(
+          size = 0.25, linetype = "solid",
+          colour = "white"
+        ),
+        plot.title = element_text(hjust = 0.5)
+      ) +
+      # labs(title = 'Great White Shark Spottings by Decade') +
+      coord_cartesian(xlim = c(-175, 175), ylim = c(-55, 55)) +
+      scale_color_manual(values = decade_colors) +
+      scale_shape_manual(values = decade_shapes)
+    ggplotly(p, tooltip = "text")
+    # https://stackoverflow.com/questions/34605919/formatting-mouse-over-labels-in-plotly-when-using-ggplotly
+  })
+  
+  #### timer ####
+
   # Countdown timer logic
   timer <- reactiveVal(300)
   active <- reactiveVal(FALSE)
-  
+
   output$timeleft <- renderText({
     paste("Time left:", seconds_to_period(timer()))
   })
-  
+
   observe({
     invalidateLater(1000, session)
     isolate({
@@ -327,8 +345,14 @@ function(data, latlng) {
       }
     })
   })
-  
-  observeEvent(input$start, { active(TRUE) })
-  observeEvent(input$stop, { active(FALSE) })
-  observeEvent(input$reset, { timer(input$seconds) })
+
+  observeEvent(input$start, {
+    active(TRUE)
+  })
+  observeEvent(input$stop, {
+    active(FALSE)
+  })
+  observeEvent(input$reset, {
+    timer(input$seconds)
+  })
 }
