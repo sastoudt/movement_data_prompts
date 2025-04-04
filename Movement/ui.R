@@ -51,7 +51,7 @@ library(RColorBrewer)
         #card_header("Our Inspiration"),
         navset_card_pill( 
           nav_panel("Caitlyn", "I was inspired to find data on sharks after seeing a shark-tracking bracelet my sister bought. With the purchase of a bracelet, she was given access to the location of a shark through an app. We watched the shark swim along the East Coast and contrived stories about what it was doing. In our minds, the shark was on a food tour trying to find the tastiest surfers."), 
-          nav_panel("Shaheryar", "Coming soon..."), 
+          nav_panel("Shaheryar", "Shaheryar: I’ve always been drawn to the hidden life within national parks—the species that quietly shape each ecosystem. What began as a simple question about how many species live in a single park grew into a deeper curiosity about biodiversity patterns across regions. That’s what led me to build an app: a platform to visualize species data and help people engage with the ecological richness of national parks in a way that’s interactive, informed, and accessible."), 
           nav_panel("Sara", "Coming soon..."),
           nav_panel("What we have read", p("Throughout developing this app, we took inspiration from pieces published in The Dodge. Here is a list of what we read:"),
           HTML("<a href='https://www.thedodgemag.com/christopherlinforth1'>Homesick by Christopher Linforth</a>"),
