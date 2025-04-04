@@ -1,4 +1,4 @@
-#
+
 # This is the user-interface definition of a Shiny web application. You can
 # run the application by clicking 'Run App' above.
 #
@@ -22,10 +22,21 @@ library(lubridate)
 library(plotly)
 library(RColorBrewer)
 
-fluidPage(
-  navbarPage("Facing the blank page? Get inspired by animal data...",
-    theme = bs_theme(version = 5, bootswatch = "minty"),
-    tabPanel(
+ fluidPage(
+  ##theme selector that you can you too see all the options ##
+  #shinythemes::themeSelector(),
+   
+   ##CURRENT THEME CHOSEN ###
+  #theme = shinythemes::shinytheme("flatly"),
+  
+  ###OTHER TAB STYLE###
+  #navbarPage("Facing the blank page? Get inspired by animal data...",
+  page_navbar(
+    title = "Facing the blank page? Get inspired by animal data...",
+    #theme = bs_theme(version = 5, bootswatch = "minty"),
+    ###OTHER TAB STYLE###
+    #tabPanel(
+    nav_panel(
       "Who are we, and what is this?",
       card(
         card_header("Our Goal"),
@@ -33,28 +44,36 @@ fluidPage(
           who have partnered with The Dodge to combine our two passions: Data Science and Nature. We have been developing different apps, like this one, to inspire creative writing based on real-world data!"),
         br(" Our team encourages you to explore the data yourself and try to find a story hidden between the data points. We hope to see your stories come to life.")
       ),
+      
+      #MAKING TABS FOR EACH OF OUR INSPIRATIONS# 
+      
       card(
-        card_header("Our Inspiration"),
-        p("Caitlyn: I was inspired to find data on sharks after seeing a shark-tracking bracelet my sister bought. With the purchase of a bracelet, she was given access to the location of a shark through an app. We watched the shark swim along the East Coast and contrived stories about what it was doing. In our minds, the shark was on a food tour trying to find the tastiest surfers."),
-        p("Shaheryar: Coming soon..."),
-        p("Sara: Coming soon..."),
-        p("Throughout developing this app, we took inspiration from pieces published in The Dodge. Here is a list of what we read:"),
-        HTML("<a href='https://www.thedodgemag.com/christopherlinforth1'>Homesick by Christopher Linforth</a>"),
-        HTML("<a href='https://www.thedodgemag.com/piyalimukherjee1'>Death is a Name Spelled in Stripes by Piyali Mukherjee </a>"),
-        HTML("<a href='https://www.thedodgemag.com/violetagarciamendoza1'>Deathbed Phenomena and Incomplete Abecedarian at the End of the Once World by Victoria Garcia-Mendoza </a>"),
-        HTML("<a href='https://cymbals-corn-mx5t.squarespace.com/joeannhart1'>Ah! by Joeann Hart</a>"),
-        HTML("<a href='https://cymbals-corn-mx5t.squarespace.com/brittneycorrigan1'>Why Did the Chicken Remix by Brittney Corrigan</a>"),
-        HTML("<a href='https://cymbals-corn-mx5t.squarespace.com/rbminer1'>The Lung Capacity of Aquatic Mammals by R.B. Miner</a>"),
-        HTML("<a href='https://www.thedodgemag.com/jondoughboy1'>The North American Blizzard of 1996 by Jon Doughboy</a>"),
-        HTML("<a href='https://www.thedodgemag.com/elizabethlevinson1'>like rabbits by Elizabeth Joy Levinson</a>"),
-        HTML("<a href='https://www.thedodgemag.com/lieselhamilton1'>On Weeds and Healing by Liesel Hamilton</a>"),
-        HTML("<a href='https://www.thedodgemag.com/mollyweisgrau1'>Animal Planet by Molly Weisgrau</a>"),
-        HTML("<a href='https://www.thedodgemag.com/brendangillen1'> Tree Food by Brendan Gillen</a>"),
-        HTML("<a href='https://www.nytimes.com/column/whats-going-on-in-this-graph'>The 'what do you notice? what do you wonder?' framework is inspired by the New York Times' What's Going On in This Graph series.</a>"),
-        HTML("<a href='https://gizmodo.com/the-weirdest-story-ideas-come-from-your-own-obsessions-5565717'>The idea to use a timer to just record as mcuh as possible from the graph to get started is inspired by the 'write 50 first sentences' prompt found here.</a>"),
-      )
+        #card_header("Our Inspiration"),
+        navset_card_pill( 
+          nav_panel("Caitlyn", "I was inspired to find data on sharks after seeing a shark-tracking bracelet my sister bought. With the purchase of a bracelet, she was given access to the location of a shark through an app. We watched the shark swim along the East Coast and contrived stories about what it was doing. In our minds, the shark was on a food tour trying to find the tastiest surfers."), 
+          nav_panel("Shaheryar", "Coming soon..."), 
+          nav_panel("Sara", "Coming soon..."),
+          nav_panel("What we have read", p("Throughout developing this app, we took inspiration from pieces published in The Dodge. Here is a list of what we read:"),
+          HTML("<a href='https://www.thedodgemag.com/christopherlinforth1'>Homesick by Christopher Linforth</a>"),
+          HTML("<a href='https://www.thedodgemag.com/piyalimukherjee1'>Death is a Name Spelled in Stripes by Piyali Mukherjee </a>"),
+          HTML("<a href='https://www.thedodgemag.com/violetagarciamendoza1'>Deathbed Phenomena and Incomplete Abecedarian at the End of the Once World by Victoria Garcia-Mendoza </a>"),
+          HTML("<a href='https://cymbals-corn-mx5t.squarespace.com/joeannhart1'>Ah! by Joeann Hart</a>"),
+          HTML("<a href='https://cymbals-corn-mx5t.squarespace.com/brittneycorrigan1'>Why Did the Chicken Remix by Brittney Corrigan</a>"),
+          HTML("<a href='https://cymbals-corn-mx5t.squarespace.com/rbminer1'>The Lung Capacity of Aquatic Mammals by R.B. Miner</a>"),
+          HTML("<a href='https://www.thedodgemag.com/jondoughboy1'>The North American Blizzard of 1996 by Jon Doughboy</a>"),
+          HTML("<a href='https://www.thedodgemag.com/elizabethlevinson1'>like rabbits by Elizabeth Joy Levinson</a>"),
+          HTML("<a href='https://www.thedodgemag.com/lieselhamilton1'>On Weeds and Healing by Liesel Hamilton</a>"),
+          HTML("<a href='https://www.thedodgemag.com/mollyweisgrau1'>Animal Planet by Molly Weisgrau</a>"),
+          HTML("<a href='https://www.thedodgemag.com/brendangillen1'> Tree Food by Brendan Gillen</a>"),
+          HTML("<a href='https://www.nytimes.com/column/whats-going-on-in-this-graph'>The 'what do you notice? what do you wonder?' framework is inspired by the New York Times' What's Going On in This Graph series.</a>"),
+          HTML("<a href='https://gizmodo.com/the-weirdest-story-ideas-come-from-your-own-obsessions-5565717'>The idea to use a timer to just record as mcuh as possible from the graph to get started is inspired by the 'write 50 first sentences' prompt found here.</a>")
+                    ),
+                    ))
     ),
-    tabPanel(
+    
+    ###OTHER TOP TAB STYLE###
+    #tabPanel(
+    nav_panel(
       "National Parks: At a Glance",
       card(
         card_header("What am I looking at?"),
@@ -75,19 +94,22 @@ fluidPage(
         ),
         card(
           card_header("What do you notice? What do you wonder?"),
+          
+          ###ADDING A SIDEBAR IN THE CARD TO TOGGLE TIMER###
+          
+          layout_sidebar(
+            fillable = TRUE,
+            sidebar = sidebar(
+            p("Need some accountability? Use this timer for brainstorming above."),
+                         actionButton("start", "Start"),
+                         actionButton("stop", "Stop"),
+                         actionButton("reset", "Reset"),
+                         numericInput("seconds", "Seconds:", value = 300, min = 0, max = 99999, step = 1),
+                         textOutput("timeleft")),
           textAreaInput("text5", "", "", height = "500px", width = "100%"),
           p("When you are done, feel free to download your ideas so you have them for future reference."),
-          downloadButton("downloadText5", "Download Notes")
+          downloadButton("downloadText5", "Download Notes"))
         )
-      ),
-      card(
-        card_header("Countdown Timer"),
-        p("Need some accountability? Use this timer for brainstorming above."),
-        actionButton("start", "Start"),
-        actionButton("stop", "Stop"),
-        actionButton("reset", "Reset"),
-        numericInput("seconds", "Seconds:", value = 300, min = 0, max = 99999, step = 1),
-        textOutput("timeleft")
       ),
       card(
         card_header("If you get stuck, use these questions to explore biodiversity insights:"),
@@ -99,7 +121,9 @@ fluidPage(
         )
       )
     ),
-    tabPanel(
+    ###OTHER TAB STYLE###
+    #tabPanel(
+    nav_panel(
       "Great White Sharks: At a Glance",
       card(
         card_header("What am I looking at?"),
@@ -122,19 +146,22 @@ fluidPage(
         height = 750
       ),
       card(
-        card_header("Get writing! What do you notice? What do you wonder?"),
-        textAreaInput("text4", "", "", height = "200px", width = "800px"),
+        ##ADDING TABS TO TEXT BOX AND PROMPTS ##
+        
+        navset_card_pill(
+          nav_panel("Time to Write!", 
+        textAreaInput("text4", "", "", height = "200px", width = "1500px"),
         p("When you are done, feel free to download your ideas so you have them for future reference."),
-        downloadButton("downloadText4", "Download Notes"),
+        downloadButton("downloadText4", "Download Notes")),
+        nav_panel("Prompts to Consider", p("What if the same shark visited a location in multiple decades? What are they looking for? Is there something special about that place?"),
+                  br("Consider an isolated data point. Why would a shark want to travel alone in a new location? How did they get there and where are they coming from?"),
+                  br("Why are the majority of the spottings on the coast? Why not the middle of the ocean? Is there something the sharks are afraid of? How do they feel about the people on the beach?"))
+      )),
       ),
-      card(
-        card_header("If you get stuck, consider these prompts:"),
-        p("What if the same shark visited a location in multiple decades? What are they looking for? Is there something special about that place?"),
-        br("Consider an isolated data point. Why would a shark want to travel alone in a new location? How did they get there and where are they coming from?"),
-        br("Why are the majority of the spottings on the coast? Why not the middle of the ocean? Is there something the sharks are afraid of? How do they feel about the people on the beach?"),
-      ),
-    ),
-    tabPanel(
+    ###OTHER TAB STYLE###
+    #tabPanel(
+    
+    nav_panel(
       "White-tailed Deer: At a Glance",
       card(
         card_header("What am I looking at?"),
@@ -175,7 +202,9 @@ fluidPage(
         p("Now that you have some ideas down, try to group them by common theme. These themes can help guide you towards a particular slice or summary of this dataset on the next page.")
       ),
     ),
-    tabPanel(
+    ###OTHER TAB STYLE###
+    #tabPanel(
+    nav_panel(
       "White-tailed Deer: A Deeper Dive",
       card(
         card_header("I'm interested in learning more about the deer's day-to-day travels."),
@@ -205,17 +234,16 @@ fluidPage(
       card(
         plotOutput("distPlot"),
       ),
+      ##ADDING TABS TO TEXT BOX AND PROMPTS ##
       card(
-        card_header("Get writing!"),
-        p(""),
+        #card_header("Get writing!"),
+        navset_card_pill(
+          nav_panel("Space to Write",p(""),
         textAreaInput("text3", "", "", height = "200px", width = "800px"),
         p("When you are done, feel free to download your ideas so you have them for future reference."),
-        downloadButton("downloadText2", "Download Notes"),
-      ),
-      card(
-        card_header("Writing Prompts"),
-        p("prompts to come")
-      ),
+        downloadButton("downloadText2", "Download Notes")),
+          nav_panel("Prompts",p("prompts to come"))
+      )),
       card(
         card_header("I'm interested in learning more about the deer's home ranges."),
         p(""),
@@ -229,17 +257,17 @@ fluidPage(
         ),
         leafletOutput("deer_home"),
       ),
+      ##ADDING TABS TO TEXT BOX AND PROMPTS ##
       card(
-        card_header("Get writing!"),
-        p(""),
-        textAreaInput("text2", "", "", height = "200px", width = "800px"),
-        p("When you are done, feel free to download your ideas so you have them for future reference."),
-        downloadButton("downloadText2", "Download Notes"),
-      ),
-      card(
-        card_header("Writing Prompts"),
-        p("prompts to come")
-      ),
+        #card_header("Get writing!"),
+        navset_card_pill(
+          nav_panel("Space to Write",p(""),
+                    textAreaInput("text3", "", "", height = "200px", width = "800px"),
+                    p("When you are done, feel free to download your ideas so you have them for future reference."),
+                    downloadButton("downloadText2", "Download Notes")),
+          nav_panel("Prompts",p("prompts to come"))
+        )),
+      
       card(
         card_header("Coming soon..."),
         p("I'm interested in learning more about the interactions between the two deer."),
