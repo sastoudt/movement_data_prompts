@@ -29,6 +29,7 @@ colnames(species_data) <- gsub("\\s+", ".", colnames(species_data))
 species_data <- species_data %>% filter(CategoryName != "Vascular Plant")
 
  fluidPage(
+   useShinyjs(),
   ##theme selector that you can you too see all the options ##
   #shinythemes::themeSelector(),
    
