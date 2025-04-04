@@ -22,6 +22,8 @@ library(lubridate)
 library(plotly)
 library(RColorBrewer)
 library(shinyjs)
+library(ggvenn)
+library(DT)
 
  fluidPage(
    useShinyjs(),
