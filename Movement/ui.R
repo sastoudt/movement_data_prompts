@@ -21,7 +21,7 @@ library(geosphere)
 library(lubridate)
 library(plotly)
 library(RColorBrewer)
-
+library(shinyjs)
 
  fluidPage(
    useShinyjs(),
