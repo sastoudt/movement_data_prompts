@@ -118,10 +118,10 @@ library(DT)
       card(
         card_header("If you get stuck, use these questions to explore biodiversity insights:"),
         tags$ul(
-          tags$li("🌿 Which parks are biodiversity hotspots? What explains the patterns?"),
-          tags$li("🦉 Are certain species naturally rare or impacted by human activity?"),
-          tags$li("🏕️ How do highly visited parks compare to less visited ones?"),
-          tags$li("🌍 Are species distributions shifting over time?")
+          tags$li("🌿 Species Diversity: Which parks are biodiversity hotspots? What might explain these patterns?"),
+          tags$li("🦉 The Mystery of Rare Species: Are certain species naturally rare or impacted by human activity?"),
+          tags$li("🏕️ Tourism vs. Biodiversity: How do highly visited parks compare to less visited ones?"),
+          tags$li("🌍 Climate Change and Species Resilience: Are species distributions shifting over time?")
         )
       )
     ),
