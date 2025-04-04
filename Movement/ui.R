@@ -22,6 +22,12 @@ library(lubridate)
 library(plotly)
 library(RColorBrewer)
 
+species_data <- read.csv("data/most_visited_nps_species_data.csv", stringsAsFactors = FALSE)
+colnames(species_data) <- gsub("\\s+", ".", colnames(species_data))
+
+# Remove Vascular Plants category
+species_data <- species_data %>% filter(CategoryName != "Vascular Plant")
+
  fluidPage(
   ##theme selector that you can you too see all the options ##
   #shinythemes::themeSelector(),
@@ -121,6 +127,33 @@ library(RColorBrewer)
         )
       )
     ),
+    
+    nav_panel("National Parks: A Deeper Dive",
+              card(
+                card_header("Compare Species Orders Across Parks"),
+                p("Select two parks and a species category to explore shared and unique species orders."),
+                selectInput("park1", "Select First Park:", choices = unique(species_data$ParkName)),
+                selectInput("park2", "Select Second Park:", choices = unique(species_data$ParkName), selected = unique(species_data$ParkName)[2]),
+                selectInput("venn_category", "Select Species Category:", choices = unique(species_data$CategoryName)),
+                checkboxInput("endangeredOnly", "Show only endangered/threatened/species of concern", value = FALSE),
+                plotOutput("vennPlot"),
+                verbatimTextOutput("vennSummary"),
+                actionButton("toggleShared", "Show/Hide Shared Species"),
+                hidden(div(id = "sharedDiv", DT::dataTableOutput("sharedSpecies"))),
+                actionButton("toggleP1", "Show/Hide Park 1 Unique Species"),
+                hidden(div(id = "p1Div", DT::dataTableOutput("park1Species"))),
+                actionButton("toggleP2", "Show/Hide Park 2 Unique Species"),
+                hidden(div(id = "p2Div", DT::dataTableOutput("park2Species")))
+              )   
+      
+      
+      
+      
+      
+    ),
+    
+    
+    
     ###OTHER TAB STYLE###
     #tabPanel(
     nav_panel(
