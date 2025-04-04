@@ -22,11 +22,6 @@ library(lubridate)
 library(plotly)
 library(RColorBrewer)
 
-species_data <- read.csv("data/most_visited_nps_species_data.csv", stringsAsFactors = FALSE)
-colnames(species_data) <- gsub("\\s+", ".", colnames(species_data))
-
-# Remove Vascular Plants category
-species_data <- species_data %>% filter(CategoryName != "Vascular Plant")
 
  fluidPage(
    useShinyjs(),
@@ -133,9 +128,19 @@ species_data <- species_data %>% filter(CategoryName != "Vascular Plant")
               card(
                 card_header("Compare Species Orders Across Parks"),
                 p("Select two parks and a species category to explore shared and unique species orders."),
-                selectInput("park1", "Select First Park:", choices = unique(species_data$ParkName)),
-                selectInput("park2", "Select Second Park:", choices = unique(species_data$ParkName), selected = unique(species_data$ParkName)[2]),
-                selectInput("venn_category", "Select Species Category:", choices = unique(species_data$CategoryName)),
+                selectInput("park1", "Select First Park:", choices = c( "Acadia National Park"         ,       "Bryce Canyon National Park"    ,      "Cuyahoga Valley National Park"     , 
+                                                                        "Glacier National Park"        ,       "Grand Canyon National Park"    ,      "Grand Teton National Park" ,         
+                                                                        "Great Smoky Mountains National Park" , "Hot Springs National Park"       ,    "Indiana Dunes National Park" ,       
+                                                                        "Joshua Tree National Park"     ,      "Olympic National Park"     ,          "Rocky Mountain National Park"  ,     
+                                                                        "Yellowstone National Park"    ,       "Yosemite National Park"  ,           "Zion National Park"   )),
+                selectInput("park2", "Select Second Park:", choices = c( "Acadia National Park"         ,       "Bryce Canyon National Park"    ,      "Cuyahoga Valley National Park"     , 
+                                                                         "Glacier National Park"        ,       "Grand Canyon National Park"    ,      "Grand Teton National Park" ,         
+                                                                         "Great Smoky Mountains National Park" , "Hot Springs National Park"       ,    "Indiana Dunes National Park" ,       
+                                                                         "Joshua Tree National Park"     ,      "Olympic National Park"     ,          "Rocky Mountain National Park"  ,     
+                                                                         "Yellowstone National Park"    ,       "Yosemite National Park"  ,           "Zion National Park"   ), selected = "Bryce Canyon National Park"),
+                selectInput("venn_category", "Select Species Category:", choices = c("Mammal"         ,       "Bird"         ,         "Reptile"         ,      "Amphibian"       ,      "Fish"     ,            
+                                                                                     "Crab/Lobster/Shrimp" ,  "Slug/Snail"      ,      "Spider/Scorpion"    ,   "Insect"      ,          "Other Non-vertebrates",
+                                                                                     "Non-vascular Plant"  ,  "Fungi"        ,         "Chromista"           ,  "Protozoa"      ,        "Bacteria"           )),
                 checkboxInput("endangeredOnly", "Show only endangered/threatened/species of concern", value = FALSE),
                 plotOutput("vennPlot"),
                 verbatimTextOutput("vennSummary"),
