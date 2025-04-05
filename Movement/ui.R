@@ -238,7 +238,7 @@ library(DT)
         ),
         card(
           card_header("Get writing! What do you notice? What do you wonder?"),
-          p("As you watch the deer, free write as many noticings and wonderings as you can before the movie ends."),
+          p("Set the timer for 5 minutes, and watch the movie unfold. As you watch, write down anything you notice or wonder. Try to catch a rough time stamp of when these noticings and wonders appear. Now reset the timer for 5 minutes, and change the point of view of the map. Continue to write down anything you notice or wonder but also mark the time stamp of any time you see the two animals get relatively close to one another."),
           textAreaInput("text", "", "", height = "600px", width = "600px"),
           p("When you are done, feel free to download your ideas so you have them for future reference."),
           downloadButton("downloadText", "Download Notes"),
@@ -289,7 +289,16 @@ library(DT)
         textAreaInput("text3", "", "", height = "200px", width = "800px"),
         p("When you are done, feel free to download your ideas so you have them for future reference."),
         downloadButton("downloadText2", "Download Notes")),
-          nav_panel("Prompts",p("prompts to come"))
+          nav_panel("Prompts",
+                    tags$ul(
+                      tags$li("Make each line of a poem proportional in length (or in number of words) to the distance traveled in each time step of one deer."),
+                      tags$li("Write a two character braid story where the characters come together when the deer get within a certain range of one another. To do this, make the story length before meeting points proportional (in sentences or physically on the page) to the time waiting for the cross."),
+                      tags$li("Use the cumulative distances travelled as a constraint for the energy or tone of the piece. In your story, the main character grows wearier and wearing in proportion to the distance travelled. If this brings your story’s energy down too much, consider what other elements in the data might represent a “boost” in energy, for example, when the character meets another character, or when they cross close to a particular spot on the map."),
+                      tags$li("Use the day of the week as a way to blend human and animal points of view. What do the “Sunday Scaries” look like for a deer? What about a deer celebrating because… TGIF?")
+                    )
+                    
+                    
+                    )
       )),
       card(
         card_header("I'm interested in learning more about the deer's home ranges."),
@@ -312,7 +321,10 @@ library(DT)
                     textAreaInput("text3", "", "", height = "200px", width = "800px"),
                     p("When you are done, feel free to download your ideas so you have them for future reference."),
                     downloadButton("downloadText2", "Download Notes")),
-          nav_panel("Prompts",p("prompts to come"))
+          nav_panel("Prompts",
+                    tags$li("Blend human and animal points of view depending on which choice of map background you choose. What things are nearby that humans might notice or wonder about? What things are nearby that deer might notice or wonder about?")
+                    
+                    )
         )),
       
       card(
