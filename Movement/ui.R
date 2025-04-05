@@ -146,6 +146,12 @@ library(DT)
                 checkboxInput("endangeredOnly", "Show only endangered/threatened/species of concern", value = FALSE),
                 plotOutput("vennPlot"),
                 verbatimTextOutput("vennSummary"),
+                tags$ul(
+                  tags$li("Pick Your Park: Select a park and scan the animals observed. What’s the first thing that stands out — a species you didn’t expect, a pattern in the numbers, or perhaps the lack of sightings? Use this observation as your entry point."),
+                  tags$li("Follow the Trail: Choose one animal and track its presence across multiple parks. Does the data reveal a migration route, or do the numbers stay consistent across locations? What could explain the patterns?"),
+                  tags$li("Moments of Conflict: Select a park where multiple species are observed. Imagine a moment of tension: predator and prey crossing paths, two animals competing for territory, or humans unknowingly disturbing a delicate balance."),
+                  tags$li("Movement Mission: Pick two species and write about them working together to travel from one side of the park they both live in to the other. What types of terrain would the group struggle with? How could they work together to overcome these?")
+                ),
                 actionButton("toggleShared", "Show/Hide Shared Species"),
                 hidden(div(id = "sharedDiv", DT::dataTableOutput("sharedSpecies"))),
                 actionButton("toggleP1", "Show/Hide Park 1 Unique Species"),
