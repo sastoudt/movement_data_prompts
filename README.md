@@ -57,3 +57,7 @@ This data comes from a [scientific study](https://besjournals.onlinelibrary.wile
 *HOW I PROCESSED MY DATA* - Sara
 
 Various summaries were computed on the two deer's coordinates and time stamp data including computing distances traveled (see [here](https://github.com/sastoudt/movement_data_prompts/blob/cfab4f9358ad3e323ee799bf6da78394f33b0c8f/Movement/server.R#L99)) and computing boundaries of travel (see [here](https://github.com/sastoudt/movement_data_prompts/blob/cfab4f9358ad3e323ee799bf6da78394f33b0c8f/Movement/server.R#L134)).
+
+## A Note About Data Sharing
+
+Within the Movement folder we locally have a data folder with the iNaturalist (great_whites.csv) and National Park data (most_visitied_nps_species_data.csv). We have not shared that data here, but instead, have walked through how to get these files above.
