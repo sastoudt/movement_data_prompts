@@ -252,7 +252,7 @@ library(DT)
         card(
           card_header("Get writing! What do you notice? What do you wonder?"),
           p("Set the timer for 5 minutes, and watch the movie unfold. As you watch, write down anything you notice or wonder. Try to catch a rough time stamp of when these noticings and wonders appear. Now reset the timer for 5 minutes, and change the point of view of the map. Continue to write down anything you notice or wonder but also mark the time stamp of any time you see the two animals get relatively close to one another."),
-          textAreaInput("text", "", "", height = "600px", width = "600px"),
+                    textAreaInput("text", "", "", height = "600px", width = "600px"),
           p("When you are done, feel free to download your ideas so you have them for future reference."),
           downloadButton("downloadText", "Download Notes"),
         ),
@@ -335,7 +335,9 @@ library(DT)
                     p("When you are done, feel free to download your ideas so you have them for future reference."),
                     downloadButton("downloadText2", "Download Notes")),
           nav_panel("Prompts",
-                    tags$li("Blend human and animal points of view depending on which choice of map background you choose. What things are nearby that humans might notice or wonder about? What things are nearby that deer might notice or wonder about?")
+                    tags$li("Blend human and animal points of view depending on which choice of map background you choose. What things are nearby that humans might notice or wonder about? What things are nearby that deer might notice or wonder about?"),
+                    tags$li("What does home mean to you and how does it relate to your daily and weekly rhythms? What connections can be found with the deer's home and rhythms?")
+                    
                     
                     )
         )),
