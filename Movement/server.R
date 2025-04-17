@@ -64,9 +64,9 @@ function(input, output, session) {
   data_nps <- reactive({
     species_data <- read.csv("data/most_visited_nps_species_data.csv", stringsAsFactors = FALSE)
     colnames(species_data) <- gsub("\\s+", ".", colnames(species_data))
-    
+    species_data <- species_data %>% filter(Occurrence == "Present")
     # Remove Vascular Plants category
-    species_data <- species_data %>% filter(CategoryName != "Vascular Plant")
+    #species_data <- species_data %>% filter(CategoryName != "Vascular Plant")
     species_data
   })
 
@@ -243,8 +243,9 @@ function(data, latlng) {
     filtered_data <- species_data %>%
       filter(CategoryName == input$species_category) %>%
       group_by(ParkName) %>%
-      summarise(Observations = sum(Observations, na.rm = TRUE)) %>%
-      arrange(desc(Observations))
+      summarise(NumberSpecies = n()) %>%
+      #summarise(Observations = sum(Observations, na.rm = TRUE)) %>%
+      arrange(desc(NumberSpecies))
     
     # Ensure there is data to plot
     validate(
@@ -252,12 +253,12 @@ function(data, latlng) {
     )
     
     # Create the bar plot
-    ggplot(filtered_data, aes(x = reorder(ParkName, Observations), y = Observations)) +
+    ggplot(filtered_data, aes(x = reorder(ParkName, NumberSpecies), y = NumberSpecies)) +
       geom_bar(stat = "identity", fill = "steelblue") +
       coord_flip() + # Flip axis to prevent overlapping names
       labs(
-        title = paste("Number of", input$species_category, "in National Parks"),
-        x = "National Park", y = "Total Observations"
+        title = paste("Number of ", input$species_category, "s in National Parks", sep=""),
+        x = "National Park", y = "Total Species"
       ) +
       theme_minimal()
   })
@@ -373,15 +374,15 @@ function(data, latlng) {
     species_data <- data_nps()
     status_filter <- if (input$endangeredOnly) c("E", "T", "SC") else unique(species_data$TEStatus)
     
-    park1_orders <- species_data %>%
+    park1_species <- species_data %>%
       filter(ParkName == input$park1, CategoryName == input$venn_category, TEStatus %in% status_filter) %>%
-      pull(Order) %>% unique()
+      pull(SciName) %>% unique()
     
-    park2_orders <- species_data %>%
+    park2_species <- species_data %>%
       filter(ParkName == input$park2, CategoryName == input$venn_category, TEStatus %in% status_filter) %>%
-      pull(Order) %>% unique()
+      pull(SciName) %>% unique()
     
-    venn_data <- list(Park1 = park1_orders, Park2 = park2_orders)
+    venn_data <- list(Park1 = park1_species, Park2 = park2_species)
     ggvenn(venn_data, fill_color = c("skyblue", "lightgreen"),
            stroke_size = 0.5, set_name_size = 4)
   })
@@ -394,16 +395,16 @@ function(data, latlng) {
     p1 <- species_data %>% filter(ParkName == input$park1, CategoryName == input$venn_category, TEStatus %in% status_filter)
     p2 <- species_data %>% filter(ParkName == input$park2, CategoryName == input$venn_category, TEStatus %in% status_filter)
     
-    o1 <- unique(p1$Order)
-    o2 <- unique(p2$Order)
+    o1 <- unique(p1$SciName)
+    o2 <- unique(p2$SciName)
     
     shared <- intersect(o1, o2)
     only1 <- setdiff(o1, o2)
     only2 <- setdiff(o2, o1)
     total <- length(unique(c(o1, o2)))
     
-    cat("🔍 Summary of Orders:\n")
-    cat(paste0("Shared Orders: ", length(shared), " (", round(length(shared)/total * 100, 1), "%)\n"))
+    cat("🔍 Summary of Species:\n")
+    cat(paste0("Shared Species: ", length(shared), " (", round(length(shared)/total * 100, 1), "%)\n"))
     cat(paste0("Unique to ", input$park1, ": ", length(only1), " (", round(length(only1)/total * 100, 1), "%)\n"))
     cat(paste0("Unique to ", input$park2, ": ", length(only2), " (", round(length(only2)/total * 100, 1), "%)\n"))
   })
@@ -412,40 +413,40 @@ function(data, latlng) {
   output$sharedSpecies <- DT::renderDataTable({
     species_data <- data_nps()
     status_filter <- if (input$endangeredOnly) c("E", "T", "SC") else unique(species_data$TEStatus)
-    shared_orders <- intersect(
-      species_data %>% filter(ParkName == input$park1, CategoryName == input$venn_category, TEStatus %in% status_filter) %>% pull(Order),
-      species_data %>% filter(ParkName == input$park2, CategoryName == input$venn_category, TEStatus %in% status_filter) %>% pull(Order)
+    shared_species <- intersect(
+      species_data %>% filter(ParkName == input$park1, CategoryName == input$venn_category, TEStatus %in% status_filter) %>% pull(SciName),
+      species_data %>% filter(ParkName == input$park2, CategoryName == input$venn_category, TEStatus %in% status_filter) %>% pull(SciName)
     )
     species_data %>%
-      filter(Order %in% shared_orders, ParkName %in% c(input$park1, input$park2),
+      filter(SciName %in% shared_species, ParkName %in% c(input$park1, input$park2),
              CategoryName == input$venn_category, TEStatus %in% status_filter) %>%
-      select(ParkName, SciName, CommonNames, Order) %>%
+      select(ParkName, SciName, CommonNames, Order, Family) %>%
       distinct()
   })
   
   output$park1Species <- DT::renderDataTable({
     species_data <- data_nps()
     status_filter <- if (input$endangeredOnly) c("E", "T", "SC") else unique(species_data$TEStatus)
-    unique_orders <- setdiff(
-      species_data %>% filter(ParkName == input$park1, CategoryName == input$venn_category, TEStatus %in% status_filter) %>% pull(Order),
-      species_data %>% filter(ParkName == input$park2, CategoryName == input$venn_category, TEStatus %in% status_filter) %>% pull(Order)
+    unique_species <- setdiff(
+      species_data %>% filter(ParkName == input$park1, CategoryName == input$venn_category, TEStatus %in% status_filter) %>% pull(SciName),
+      species_data %>% filter(ParkName == input$park2, CategoryName == input$venn_category, TEStatus %in% status_filter) %>% pull(SciName)
     )
     species_data %>%
-      filter(ParkName == input$park1, Order %in% unique_orders, CategoryName == input$venn_category, TEStatus %in% status_filter) %>%
-      select(SciName, CommonNames, Order) %>%
+      filter(ParkName == input$park1, SciName %in% unique_species, CategoryName == input$venn_category, TEStatus %in% status_filter) %>%
+      select(SciName, CommonNames, Order, Family) %>%
       distinct()
   })
   
   output$park2Species <- DT::renderDataTable({
     species_data <- data_nps()
     status_filter <- if (input$endangeredOnly) c("E", "T", "SC") else unique(species_data$TEStatus)
-    unique_orders <- setdiff(
-      species_data %>% filter(ParkName == input$park2, CategoryName == input$venn_category, TEStatus %in% status_filter) %>% pull(Order),
-      species_data %>% filter(ParkName == input$park1, CategoryName == input$venn_category, TEStatus %in% status_filter) %>% pull(Order)
+    unique_species <- setdiff(
+      species_data %>% filter(ParkName == input$park2, CategoryName == input$venn_category, TEStatus %in% status_filter) %>% pull(SciName),
+      species_data %>% filter(ParkName == input$park1, CategoryName == input$venn_category, TEStatus %in% status_filter) %>% pull(SciName)
     )
     species_data %>%
-      filter(ParkName == input$park2, Order %in% unique_orders, CategoryName == input$venn_category, TEStatus %in% status_filter) %>%
-      select(SciName, CommonNames, Order) %>%
+      filter(ParkName == input$park2, SciName %in% unique_species, CategoryName == input$venn_category, TEStatus %in% status_filter) %>%
+      select(SciName, CommonNames, Order, Family) %>%
       distinct()
   })
   

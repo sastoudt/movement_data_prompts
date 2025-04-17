@@ -55,8 +55,8 @@ library(DT)
         #card_header("Our Inspiration"),
         navset_card_pill( 
           nav_panel("Caitlyn", "I was inspired to find data on sharks after seeing a shark-tracking bracelet my sister bought. With the purchase of a bracelet, she was given access to the location of a shark through an app. We watched the shark swim along the East Coast and contrived stories about what it was doing. In our minds, the shark was on a food tour trying to find the tastiest surfers."), 
-          nav_panel("Shaheryar", "Shaheryar: I’ve always been drawn to the hidden life within national parks—the species that quietly shape each ecosystem. What began as a simple question about how many species live in a single park grew into a deeper curiosity about biodiversity patterns across regions. That’s what led me to build an app: a platform to visualize species data and help people engage with the ecological richness of national parks in a way that’s interactive, informed, and accessible."), 
-          nav_panel("Sara", "Coming soon..."),
+          nav_panel("Shaheryar", "I’ve always been drawn to the hidden life within national parks—the species that quietly shape each ecosystem. What began as a simple question about how many species live in a single park grew into a deeper curiosity about biodiversity patterns across regions. That’s what led me to build an app: a platform to visualize species data and help people engage with the ecological richness of national parks in a way that’s interactive, informed, and accessible."), 
+          nav_panel("Sara", "I had been working with The Dodge, an online literary magazine focusing on eco-writing, to try to develop an interactive web app that helps make exploring different nature-related datasets more accessible with the idea that something in the data might be generative, sparking some ideas about something to write about. Ideally, we would have a few different datasets paired with some writing prompts to get people started and then we would either run some kind of contest to get new people writing for the Dodge or have the app go out in a newsletter/on social media to just give people a way into the writing if they are facing the blank page. I was hitting a wall with my own progress and thought I could use some fresh eyes and some help, so I pitched this project idea to the Dominguez Center for Data Science."),
           nav_panel("What we have read", p("Throughout developing this app, we took inspiration from pieces published in The Dodge. Here is a list of what we read:"),
           HTML("<a href='https://www.thedodgemag.com/christopherlinforth1'>Homesick by Christopher Linforth</a>"),
           HTML("<a href='https://www.thedodgemag.com/piyalimukherjee1'>Death is a Name Spelled in Stripes by Piyali Mukherjee </a>"),
@@ -123,7 +123,16 @@ library(DT)
           tags$li("🏕️ Tourism vs. Biodiversity: How do highly visited parks compare to less visited ones?"),
           tags$li("🌍 Climate Change and Species Resilience: Are species distributions shifting over time?")
         )
-      )
+      ), 
+      card(
+        card_header("Want more specific writing prompts?"),
+        tags$ul(
+          tags$li("The Forgotten Ones: Choose an overlooked species category like fungi, chromista, or protozoa. Write a poetic ode or speculative fiction where these organisms shape the future of the park’s ecosystem."),
+          tags$li("A Secret Between: Pick two vastly different species categories (e.g. spider/scorpion and fish). Invent a tale of quiet communication between them—a warning system, a secret alliance."),
+          tags$li("Missingness: Write a creative nonfiction or investigative speculative essay that interrogates absence in this data. Is a missing species a missing data entry, an oversight in the system, or a deeper commentary on what types of life we value and record?"),
+          tags$li("Being Counted: Use the absence of species to explore what it means to not be counted. Reflect on what disappears when documentation fails—and who is left unseen.")
+        )
+      ),
     ),
     
     nav_panel("National Parks: A Deeper Dive",
@@ -150,7 +159,11 @@ library(DT)
                   tags$li("Pick Your Park: Select a park and scan the animals observed. What’s the first thing that stands out — a species you didn’t expect, a pattern in the numbers, or perhaps the lack of sightings? Use this observation as your entry point."),
                   tags$li("Follow the Trail: Choose one animal and track its presence across multiple parks. Does the data reveal a migration route, or do the numbers stay consistent across locations? What could explain the patterns?"),
                   tags$li("Moments of Conflict: Select a park where multiple species are observed. Imagine a moment of tension: predator and prey crossing paths, two animals competing for territory, or humans unknowingly disturbing a delicate balance."),
-                  tags$li("Movement Mission: Pick two species and write about them working together to travel from one side of the park they both live in to the other. What types of terrain would the group struggle with? How could they work together to overcome these?")
+                  tags$li("Movement Mission: Pick two species and write about them working together to travel from one side of the park they both live in to the other. What types of terrain would the group struggle with? How could they work together to overcome these?"),
+                  tags$li("Echoes in the Peaks: Look at a subset of the species list for a national park with high species diversity (e.g. Great Smoky Mountains). Write a multi-perspective narrative weaving together voices of species from different taxa—plant, bird, insect—coping with a sudden environmental shift."),
+                  tags$li("Endangered Prayers: Filter for endangered or threatened species. Write a meditative monologue from one such species — its fears, memories, and its prayer to the earth."),
+                  tags$li("A Game of Species: Pick two parks with very different species. Write a letter exchange between two species — one from each park—exploring how their ecosystems have shaped their identities.")
+     
                 ),
                 actionButton("toggleShared", "Show/Hide Shared Species"),
                 hidden(div(id = "sharedDiv", DT::dataTableOutput("sharedSpecies"))),
