@@ -8,13 +8,14 @@ Read more about the behind-the-scenes aspects of the project [here](). *blog pos
 
 iNaturalist is a website that allows users to submit their sightings of plants and animals so we can collect data on the world around us. Users take a photo, geotag the location, and post it for others to verify. Once enough experts have checked the information, the observation is added to the data pool.
 
-**figure to come**
+![](https://github.com/sastoudt/movement_data_prompts/blob/main/screenshots/inat-screenshot.png)
 
 In making the map, I used verified observations on great white sharks to create my data set. If you search for great whites on iNaturalist, you would get something like the below screenshot.
 
 However, I chose to use the iNaturalist export feature to compile all of this data into a file I could use in RStudio. This can be done [here](https://www.inaturalist.org/observations/export). (Note: You will need to make a free iNaturalist account first.) I selected Great White Sharks as my ‘Taxon’ and changed the ‘verifiable’ options from ‘any’ to ‘yes’. This eliminated any data points that did not have locational data, which would help me when processing the data. iNaturalist allows you to pick which categories of information you want to export for each observation. There are tons of choices besides the categories I used, and you can select the groups you want from these check boxes:
 
-**figure to come**
+![](https://github.com/sastoudt/movement_data_prompts/blob/main/screenshots/inat-query.png)
+
 
 For each data point, I only exported the following information:
 
