@@ -62,3 +62,7 @@ Various summaries were computed on the two deer's coordinates and time stamp dat
 ## A Note About Data Sharing
 
 Within the Movement folder we locally have a data folder with the iNaturalist (great_whites.csv) and National Park data (most_visitied_nps_species_data.csv). We have not shared that data here, but instead, have walked through how to get these files above.
+
+## Check out the app
+
+A draft of the app can be found [here](https://sara-stoudt.shinyapps.io/movement/). [This](https://sastoudt.shinyapps.io/movement_copy/) is the same app, but since we haven’t scaled anything up yet, if the first one has too many users at one time, it will crash, so you can look here too. 
