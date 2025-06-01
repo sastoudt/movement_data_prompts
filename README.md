@@ -1,6 +1,6 @@
 # Data-Driven Narratives: Inspiring Eco-writing with an Interactive Data Exploration Applet
 
-Read more about the behind-the-scenes aspects of the project [here](). *blog post coming soon*
+Read more about the behind-the-scenes aspects of the project [here](https://datascience.scholar.bucknell.edu/2025/05/27/bridging-data-and-storytelling-behind-the-scenes-of-the-eco-writing-apps/). 
 
 ## Shark Data
 
