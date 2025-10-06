@@ -65,4 +65,4 @@ Within the Movement folder we locally have a data folder with the iNaturalist (g
 
 ## Check out the app
 
-A draft of the app can be found [here](https://sara-stoudt.shinyapps.io/movement/). [This](https://sastoudt.shinyapps.io/movement_copy/) is the same app, but since we haven’t scaled anything up yet, if the first one has too many users at one time, it will crash, so you can look here too. 
+A draft of the app can be found [here]([https://sara-stoudt.shinyapps.io/movement/](https://sastoudt.shinyapps.io/eco_data_driven_detail/)). 
